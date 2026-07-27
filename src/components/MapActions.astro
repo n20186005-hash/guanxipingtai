@@ -1,0 +1,37 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+
+interface Props {
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
+
+const actions = [
+  { label: '查看地點', href: site.maps.place, icon: 'map' as const, primary: true },
+  { label: '開車路線', href: site.maps.driving, icon: 'car' as const },
+  { label: '大眾運輸', href: site.maps.transit, icon: 'transit' as const },
+  { label: '步行路線', href: site.maps.walking, icon: 'walk' as const }
+];
+---
+
+<div class:list={['map-actions', compact && 'map-actions-compact']}>
+  {
+    actions.map((action) => (
+      <a
+        href={action.href}
+        target="_blank"
+        rel="noreferrer"
+        class:list={[
+          'map-action',
+          action.primary ? 'map-action-primary' : 'map-action-secondary'
+        ]}
+      >
+        <Icon name={action.icon} class="size-5" />
+        <span>{action.label}</span>
+        <Icon name="arrow" class="ml-auto size-4 opacity-60" />
+      </a>
+    ))
+  }
+</div>

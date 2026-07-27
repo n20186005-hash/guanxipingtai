@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<BaseLayout
+  title="找不到頁面｜觀夕平台旅遊指南"
+  description="這個頁面不存在，請返回觀夕平台旅遊指南首頁或查看交通、最佳時間與安全提醒。"
+  noindex
+>
+  <section class="relative overflow-hidden bg-[#173b3f]">
+    <div class="absolute -right-20 -top-20 size-72 rounded-full bg-[#e98a4a]/20"></div>
+    <div class="shell relative z-10 flex min-h-[70vh] flex-col items-start justify-center py-20 text-white">
+      <p class="text-xs font-bold tracking-[.2em] text-[#f5ab78]">404</p>
+      <h1 class="mt-5 text-[clamp(3rem,12vw,8rem)] font-semibold leading-none tracking-[-.065em]">這一頁退潮了</h1>
+      <p class="mt-6 max-w-xl text-base leading-8 text-white/65">
+        連結可能已經移動，或網址輸入有誤。先回到首頁，再安排前往安平海岸的路。
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a class="button button-sunset" href="/">
+          返回首頁
+          <Icon name="arrow" class="size-4" />
+        </a>
+        <a class="button button-light" href="/transport-parking/">查看交通與停車</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

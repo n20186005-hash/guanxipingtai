@@ -1,0 +1,27 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  condensed?: boolean;
+}
+
+const { condensed = false } = Astro.props;
+---
+
+<aside class:list={['safety-alert', condensed && 'safety-alert-condensed']}>
+  <span class="safety-icon"><Icon name="shield" class="size-6" /></span>
+  <div>
+    <p class="mb-1 font-semibold text-[#173b3f]">海邊不是沒有浪就代表安全</p>
+    <p>
+      這裡是自然海岸環境，不建議下水游泳。請留意浪況、離岸流、強風與現場警示；兒童靠近水邊時需由成人全程陪同。
+    </p>
+    {
+      !condensed && (
+        <a href="/safety/" class="text-link mt-4 inline-flex items-center gap-1.5">
+          查看完整安全提醒
+          <Icon name="arrow" class="size-4" />
+        </a>
+      )
+    }
+  </div>
+</aside>

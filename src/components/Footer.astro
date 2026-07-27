@@ -1,0 +1,74 @@
+---
+import Icon from './Icon.astro';
+import { allGuides, site } from '../data/site';
+---
+
+<footer class="footer">
+  <div class="shell grid gap-12 py-16 md:grid-cols-[1.2fr_1fr_1fr]">
+    <div>
+      <a href="/" class="brand-link mb-5 inline-flex" aria-label={`${site.fullName}首頁`}>
+        <span class="brand-mark" aria-hidden="true">
+          <span class="brand-sun"></span>
+          <span class="brand-wave"></span>
+        </span>
+        <span>
+          <strong class="block text-lg tracking-[.12em] text-white">觀夕平台</strong>
+        </span>
+      </a>
+      <p class="max-w-sm text-sm leading-7 text-white/60">
+        從抵達、停車到等待夕陽，整理安平海岸旅行真正需要的資訊，讓一天在海風裡安穩收尾。
+      </p>
+      <a
+        class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#f5ab78]"
+        href={site.maps.place}
+        target="_blank"
+        rel="noreferrer"
+      >
+        <Icon name="map" class="size-4" />
+        臺南市安平區・查看位置
+      </a>
+    </div>
+
+    <div>
+      <p class="footer-title">規劃旅程</p>
+      <div class="grid grid-cols-2 gap-x-5 gap-y-3">
+        {
+          allGuides.slice(0, 8).map((guide) => (
+            <a class="footer-link" href={guide.href}>{guide.label}</a>
+          ))
+        }
+      </div>
+    </div>
+
+    <div>
+      <p class="footer-title">旅前查詢</p>
+      <div class="flex flex-col gap-3">
+        <a class="footer-link" href="/sources/">資料來源與圖片授權</a>
+        <a
+          class="footer-link"
+          href="https://www.cwa.gov.tw/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          中央氣象署
+        </a>
+        <a
+          class="footer-link"
+          href="https://2384.tainan.gov.tw/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          大台南公車
+        </a>
+        <a class="footer-link" href="/safety/">海邊安全提醒</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-white/10">
+    <div class="shell flex flex-col gap-2 py-6 text-xs text-white/45 sm:flex-row sm:items-center sm:justify-between">
+      <p>© {new Date().getFullYear()} 觀夕平台旅遊指南</p>
+      <p>海況與現場告示優先，資訊異動請於出發前再次確認。</p>
+    </div>
+  </div>
+</footer>

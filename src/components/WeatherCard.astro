@@ -1,0 +1,221 @@
+---
+import Icon from './Icon.astro';
+---
+
+<article class="weather-card" data-weather-card aria-labelledby="weather-title" aria-busy="true">
+  <header class="weather-heading">
+    <div>
+      <h2 id="weather-title" class="section-title">今天的觀夕平台天氣</h2>
+      <p class="section-lead mt-4">
+        固定查詢安平海岸周邊，提供目前天氣與三日預報。
+      </p>
+    </div>
+    <p class="weather-updated" data-weather-updated aria-live="polite">正在取得最新資料…</p>
+  </header>
+
+  <div class="weather-shell">
+    <div class="weather-loading" data-weather-loading>
+      <span class="weather-loading-icon" aria-hidden="true"></span>
+      <div>
+        <strong>天氣資料載入中</strong>
+        <p>正在連線至本站的天氣服務…</p>
+      </div>
+    </div>
+
+    <div class="weather-content" data-weather-content hidden>
+      <div class="weather-summary">
+        <div class="weather-current">
+          <span class="weather-icon" aria-hidden="true" data-weather-icon>🌤️</span>
+          <div>
+            <p class="weather-condition" data-weather-condition>--</p>
+            <div class="weather-temperature">
+              <strong data-weather-temperature>--°</strong>
+              <span>體感 <b data-weather-apparent>--°</b></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="weather-advice" data-weather-advice data-level="good">
+          <span class="weather-advice-dot" aria-hidden="true"></span>
+          <div>
+            <strong data-weather-advice-title>取得行程提醒中</strong>
+            <p data-weather-advice-text>請稍候。</p>
+          </div>
+        </div>
+      </div>
+
+      <dl class="weather-metrics">
+        <div><dt>今日高／低</dt><dd data-weather-range>--°／--°</dd></div>
+        <div><dt>最高降雨機率</dt><dd data-weather-rain>--%</dd></div>
+        <div><dt>目前風速</dt><dd data-weather-wind>-- km/h</dd></div>
+        <div><dt>今日最大陣風</dt><dd data-weather-gust>-- km/h</dd></div>
+      </dl>
+
+      <ul class="weather-days" data-weather-days aria-label="三日天氣預報"></ul>
+
+      <footer class="weather-footer">
+        <p>自動天氣預報不含即時海浪資訊，海況與現場警示優先。</p>
+        <p>
+          資料來源：
+          <a href="https://open-meteo.com/" target="_blank" rel="noopener" data-weather-source>
+            Open-Meteo
+          </a>
+        </p>
+      </footer>
+    </div>
+
+    <div class="weather-error" data-weather-error hidden>
+      <span aria-hidden="true"><Icon name="wave" class="size-6" /></span>
+      <div>
+        <strong>暫時無法取得天氣資料</strong>
+        <p>
+          請稍後再試，或直接查看
+          <a href="https://www.cwa.gov.tw/" target="_blank" rel="noopener">中央氣象署</a>。
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <a class="weather-more" href="/best-time/">
+    查看遊覽時間與天氣建議
+    <Icon name="arrow" class="size-4" />
+  </a>
+</article>
+
+<script>
+  interface WeatherDay {
+    label: string;
+    icon: string;
+    condition: string;
+    maxTemperature: number;
+    minTemperature: number;
+    precipitationProbability: number;
+  }
+
+  interface WeatherResponse {
+    updatedAt: string;
+    current: {
+      icon: string;
+      condition: string;
+      weatherCode: number;
+      isDay: boolean;
+      temperature: number;
+      apparentTemperature: number;
+      windSpeed: number;
+    };
+    today: {
+      maxTemperature: number;
+      minTemperature: number;
+      precipitationProbability: number;
+      maxWindGust: number;
+    };
+    daily: WeatherDay[];
+    advice: {
+      level: 'good' | 'watch' | 'avoid';
+      title: string;
+      text: string;
+    };
+    source: {
+      name: string;
+      url: string;
+    };
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-weather-card]').forEach((card) => {
+    const loading = card.querySelector('[data-weather-loading]');
+    const content = card.querySelector('[data-weather-content]');
+    const error = card.querySelector('[data-weather-error]');
+
+    const setText = (selector: string, value: string) => {
+      const element = card.querySelector(selector);
+      if (element) element.textContent = value;
+    };
+
+    fetch('/api/weather', { headers: { Accept: 'application/json' } })
+      .then((response) => {
+        if (!response.ok) throw new Error('Weather request failed');
+        return response.json();
+      })
+      .then((weather: WeatherResponse) => {
+        setText('[data-weather-icon]', weather.current.icon);
+        setText('[data-weather-temperature]', `${Math.round(weather.current.temperature)}°`);
+
+        const thunder = [82, 95, 96, 99].includes(weather.current.weatherCode);
+        setText(
+          '[data-weather-condition]',
+          `${weather.current.isDay !== false ? '日間' : '夜間'} · ${thunder ? '雷雨警示' : weather.current.condition}`
+        );
+        setText('[data-weather-apparent]', `${Math.round(weather.current.apparentTemperature)}°`);
+        setText(
+          '[data-weather-range]',
+          `${Math.round(weather.today.maxTemperature)}°／${Math.round(weather.today.minTemperature)}°`
+        );
+        setText(
+          '[data-weather-rain]',
+          `${Math.round(weather.today.precipitationProbability)}%`
+        );
+        setText('[data-weather-wind]', `${Math.round(weather.current.windSpeed)} km/h`);
+        setText('[data-weather-gust]', `${Math.round(weather.today.maxWindGust)} km/h`);
+        setText('[data-weather-advice-title]', weather.advice.title);
+        setText('[data-weather-advice-text]', weather.advice.text);
+
+        const advice = card.querySelector('[data-weather-advice]');
+        if (advice instanceof HTMLElement) advice.dataset.level = weather.advice.level;
+
+        const updated = new Date(weather.updatedAt);
+        setText(
+          '[data-weather-updated]',
+          `更新於 ${new Intl.DateTimeFormat('zh-TW', {
+            month: 'numeric',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+          }).format(updated)}`
+        );
+
+        const source = card.querySelector('[data-weather-source]');
+        if (source instanceof HTMLAnchorElement) {
+          source.textContent = weather.source.name;
+          source.href = weather.source.url;
+        }
+
+        const days = card.querySelector('[data-weather-days]');
+        if (days instanceof HTMLUListElement) {
+          days.replaceChildren(
+            ...weather.daily.map((day) => {
+              const item = document.createElement('li');
+              const lead = document.createElement('div');
+              const label = document.createElement('strong');
+              const condition = document.createElement('span');
+              const values = document.createElement('div');
+              const temperatures = document.createElement('strong');
+              const rain = document.createElement('span');
+
+              label.textContent = day.label;
+              condition.textContent = `${day.icon} ${day.condition}`;
+              temperatures.textContent =
+                `${Math.round(day.maxTemperature)}°／${Math.round(day.minTemperature)}°`;
+              rain.textContent = `降雨 ${Math.round(day.precipitationProbability)}%`;
+              lead.append(label, condition);
+              values.append(temperatures, rain);
+              item.append(lead, values);
+              return item;
+            })
+          );
+        }
+
+        if (loading instanceof HTMLElement) loading.hidden = true;
+        if (error instanceof HTMLElement) error.hidden = true;
+        if (content instanceof HTMLElement) content.hidden = false;
+        card.setAttribute('aria-busy', 'false');
+      })
+      .catch(() => {
+        if (loading instanceof HTMLElement) loading.hidden = true;
+        if (content instanceof HTMLElement) content.hidden = true;
+        if (error instanceof HTMLElement) error.hidden = false;
+        setText('[data-weather-updated]', '資料暫時無法取得');
+        card.setAttribute('aria-busy', 'false');
+      });
+  });
+</script>

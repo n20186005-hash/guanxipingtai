@@ -1,0 +1,201 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site';
+
+const sourceGroups = [
+  {
+    title: '地點與交通',
+    items: [
+      ['Google 地圖', site.maps.place],
+      ['大台南公車', 'https://2384.tainan.gov.tw/'],
+      ['台灣好行', 'https://www.taiwantrip.com.tw/'],
+      ['臺南旅遊網', 'https://www.twtainan.net/']
+    ]
+  },
+  {
+    title: '天氣與安全',
+    items: [
+      ['中央氣象署', 'https://www.cwa.gov.tw/'],
+      ['交通部觀光署', 'https://www.taiwan.net.tw/'],
+      ['臺南市政府', 'https://www.tainan.gov.tw/']
+    ]
+  }
+];
+
+const photoCredits = [
+  {
+    file: '安平商港北堤',
+    use: '首頁首圖、社群分享圖',
+    author: 'Guanting Chen',
+    license: 'CC BY-SA 4.0',
+    url: 'https://commons.wikimedia.org/wiki/File:%E5%AE%89%E5%B9%B3%E5%95%86%E6%B8%AF%E5%8C%97%E5%A0%A4.jpg'
+  },
+  {
+    file: 'Sunset Platform',
+    use: '觀夕平台海岸實景',
+    author: 'ScoutT7',
+    license: 'CC BY-SA 4.0',
+    url: 'https://commons.wikimedia.org/wiki/File:Sunset_Platform.jpg'
+  },
+  {
+    file: 'Anping Old Street',
+    use: '附近景點・安平老街',
+    author: 'Chongkian',
+    license: 'CC BY-SA 4.0',
+    url: 'https://commons.wikimedia.org/wiki/File:Anping_Old_Street.jpg'
+  },
+  {
+    file: '2015-05-01 Anping Tree House 01',
+    use: '附近景點・安平樹屋',
+    author: 'Sun Taro',
+    license: 'CC BY-SA 2.0',
+    url: 'https://commons.wikimedia.org/wiki/File:2015-05-01_Anping_Tree_House_01.jpg'
+  },
+  {
+    file: 'Food for sale on Anping Old Street',
+    use: '周邊美食',
+    author: 'Mx. Granger',
+    license: 'CC0',
+    url: 'https://commons.wikimedia.org/wiki/File:Food_for_sale_on_Anping_Old_Street.jpg'
+  }
+];
+---
+
+<BaseLayout
+  title="資料來源與圖片授權｜觀夕平台旅遊指南"
+  description="觀夕平台旅遊指南的交通、天氣、安全資料來源，以及網站使用之安平實景圖片授權與攝影者資訊。"
+>
+  <header class="guide-hero guide-hero-sea">
+    <div class="shell relative z-10 py-16 sm:py-24">
+      <nav class="breadcrumb" aria-label="麵包屑">
+        <a href="/">首頁</a><span aria-hidden="true">／</span><span>資料來源</span>
+      </nav>
+      <h1 class="mt-8 max-w-4xl text-balance text-[clamp(2.4rem,7vw,5rem)] font-semibold leading-[1.06] tracking-[-.05em] text-white">
+        資料來源與圖片授權
+      </h1>
+      <p class="mt-6 max-w-2xl text-base leading-8 text-white/68">
+        旅遊資訊依穩定度選擇來源；實景照片均保留作者、授權條款與原始檔案頁面。
+      </p>
+    </div>
+  </header>
+
+  <div class="shell py-16 sm:py-24">
+    <section>
+      <h2 class="text-3xl font-semibold tracking-[-.035em] text-[#173b3f]">旅遊資訊查核原則</h2>
+      <p class="section-lead mt-5">
+        現場最新公告優先，其次為景點管理單位、臺南市政府、交通營運單位與中央氣象署。地圖近期資訊用於補充旅客現場觀察，不取代交通或安全公告。
+      </p>
+      <div class="mt-8 grid gap-4 md:grid-cols-2">
+        {
+          sourceGroups.map((group) => (
+            <div class="rounded-2xl border border-[#173b3f]/10 bg-white/60 p-6">
+              <h3 class="font-semibold text-[#173b3f]">{group.title}</h3>
+              <div class="mt-4 flex flex-col">
+                {group.items.map(([label, url]) => (
+                  <a
+                    class="flex items-center justify-between gap-4 border-t border-[#173b3f]/8 py-3 text-sm font-semibold text-[#2e6f73]"
+                    href={url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {label}
+                    <Icon name="arrow" class="size-4" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="mt-20">
+      <h2 class="text-3xl font-semibold tracking-[-.035em] text-[#173b3f]">實景圖片授權</h2>
+      <p class="section-lead mt-5">
+        圖片取自 Wikimedia Commons，建置時由 Astro 產生適合裝置的 AVIF／WebP 尺寸；版面可能使用不同比例裁切，但未改變照片內容。
+      </p>
+      <div class="mt-8 overflow-hidden rounded-2xl border border-[#173b3f]/10 bg-white/60">
+        {
+          photoCredits.map((credit) => (
+            <a
+              href={credit.url}
+              target="_blank"
+              rel="noreferrer"
+              class="credit-row"
+            >
+              <span>
+                <strong>{credit.file}</strong>
+                <small>{credit.use}</small>
+              </span>
+              <span class="text-right">
+                <strong>{credit.author}</strong>
+                <small>{credit.license}</small>
+              </span>
+              <Icon name="arrow" class="size-5 shrink-0 text-[#2e6f73]" />
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="mt-16 rounded-2xl bg-[#173b3f] p-6 text-white sm:p-8">
+      <h2 class="text-xl font-semibold">資訊異動時怎麼判斷</h2>
+      <p class="mt-3 max-w-3xl text-sm leading-7 text-white/62">
+        停車、公車、洗手間、店家營業與海岸狀態都可能改變。來源有衝突時，以現場公告、管理單位與交通營運單位最新資訊為準；安全相關內容不以一般旅遊文章覆蓋警示。
+      </p>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .credit-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, .8fr) auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid rgb(23 59 63 / 9%);
+    color: #173b3f;
+    transition: background 160ms ease;
+  }
+
+  .credit-row:last-child {
+    border-bottom: 0;
+  }
+
+  .credit-row:hover {
+    background: white;
+  }
+
+  .credit-row strong,
+  .credit-row small {
+    display: block;
+  }
+
+  .credit-row strong {
+    font-size: .86rem;
+  }
+
+  .credit-row small {
+    margin-top: .2rem;
+    color: rgb(23 59 63 / 52%);
+    font-size: .7rem;
+  }
+
+  @media (max-width: 640px) {
+    .credit-row {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .credit-row > span:nth-child(2) {
+      grid-column: 1;
+      text-align: left;
+    }
+
+    .credit-row > svg {
+      grid-column: 2;
+      grid-row: 1 / 3;
+    }
+  }
+</style>

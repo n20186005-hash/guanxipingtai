@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+*.local
+.DS_Store
+*.log
+apps/web/src/routeTree.gen.ts
+releases/
+
+
+.astro
+.wrangler/

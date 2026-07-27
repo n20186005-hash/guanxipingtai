@@ -1,0 +1,948 @@
+---
+import { Image, Picture } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import MapActions from '../components/MapActions.astro';
+import SafetyAlert from '../components/SafetyAlert.astro';
+import StatusNotice from '../components/StatusNotice.astro';
+import WeatherCard from '../components/WeatherCard.astro';
+import { faqItems, site } from '../data/site';
+import heroImage from '../assets/images/hero-anping-sunset.jpg';
+import coastImage from '../assets/images/sunset-platform-coast.jpg';
+import oldStreetImage from '../assets/images/anping-old-street.jpg';
+import treeHouseImage from '../assets/images/anping-tree-house.jpg';
+import foodImage from '../assets/images/anping-market-food.jpg';
+
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: site.fullName,
+    alternateName: '觀夕平台',
+    url: site.url,
+    inLanguage: 'zh-Hant-TW',
+    description: site.description
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'TouristAttraction',
+    name: '觀夕平台',
+    alternateName: '觀夕平臺',
+    description:
+      '位於臺南安平海岸，適合散步、看海、拍攝剪影與欣賞臺灣海峽夕陽的戶外景點。',
+    url: site.url,
+    image: `${site.url}/og-guanxipingtai.jpg`,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: '漁濱路',
+      postalCode: '708',
+      addressLocality: '安平區',
+      addressRegion: '臺南市',
+      addressCountry: 'TW'
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: site.coordinates.latitude,
+      longitude: site.coordinates.longitude
+    },
+    touristType: ['親子旅客', '情侶', '攝影旅客', '自由行旅客'],
+    sameAs: [site.maps.place]
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: '首頁',
+        item: site.url
+      }
+    ]
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.slice(0, 6).map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer
+      }
+    }))
+  }
+];
+
+const quickCards = [
+  {
+    number: '01',
+    title: '幾點到比較好？',
+    text: '一般旅客可在日落前 45–60 分鐘抵達；週末、自駕或想拍完整光線變化，建議再提早一些。',
+    href: '/best-time/',
+    icon: 'sun' as const
+  },
+  {
+    number: '02',
+    title: '適合停留多久？',
+    text: '單純賞夕約 60–90 分鐘；親子玩沙或攝影，可連同收拾與返程預留約 2 小時。',
+    href: '/guide/',
+    icon: 'clock' as const
+  },
+  {
+    number: '03',
+    title: '停車方便嗎？',
+    text: '夕陽前後與假日較容易滿位。不要把導航時間當成抵達時間，另外保留找位與步行的緩衝。',
+    href: '/transport-parking/',
+    icon: 'car' as const
+  },
+  {
+    number: '04',
+    title: '可以下水嗎？',
+    text: '不建議把此處當成海水浴場。即使海面平靜，也要留意離岸流、突發浪況與現場警示。',
+    href: '/safety/',
+    icon: 'shield' as const
+  }
+];
+
+const activities = [
+  { title: '等待夕陽', text: '看金色海面慢慢轉成晚霞。', icon: 'sun' as const },
+  { title: '海岸散步', text: '沿平台、防風林與沙岸找自己的節奏。', icon: 'walk' as const },
+  { title: '拍攝剪影', text: '人物、港灣與雲層都是構圖的一部分。', icon: 'sparkles' as const },
+  { title: '親子玩沙', text: '留在乾沙區，與浪線保持安全距離。', icon: 'wave' as const }
+];
+
+const routes = [
+  {
+    duration: '60 MIN',
+    title: '快速賞夕',
+    steps: ['入口確認', '平台看海', '夕陽位置', '日落後返程']
+  },
+  {
+    duration: '90 MIN',
+    title: '第一次來最剛好',
+    steps: ['提早抵達', '海岸散步', '黃金時刻', '晚霞']
+  },
+  {
+    duration: '120 MIN',
+    title: '親子或攝影',
+    steps: ['熟悉環境', '玩沙取景', '日落', '藍調時刻']
+  }
+];
+---
+
+<BaseLayout structuredData={structuredData}>
+  <section class="home-hero">
+    <Picture
+      src={heroImage}
+      formats={['avif', 'webp']}
+      widths={[640, 960, 1280, 1600, 1920]}
+      sizes="100vw"
+      alt="安平港北堤與臺灣海峽黃昏雲層"
+      class="home-hero-picture"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div class="home-hero-overlay"></div>
+    <div class="hero-sun" aria-hidden="true"></div>
+
+    <div class="shell relative z-10 flex min-h-[min(780px,calc(100svh-72px))] flex-col justify-end pb-8 pt-20 sm:pb-12">
+      <div class="max-w-4xl">
+        <h1 class="hero-title">
+          <span>觀夕平台</span>
+          <small>安平一天的最後一站</small>
+        </h1>
+        <p class="mt-6 max-w-2xl text-base leading-8 text-white/76 sm:text-lg">
+          在臺南安平的海岸線，散步、看海、等待夕陽落入臺灣海峽。先把交通、停車與回程想好，再把黃昏留給海風。
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a
+            href={site.maps.place}
+            target="_blank"
+            rel="noreferrer"
+            class="button button-sunset"
+          >
+            <Icon name="map" class="size-5" />
+            在 Google 地圖查看
+          </a>
+          <a
+            href={site.maps.driving}
+            target="_blank"
+            rel="noreferrer"
+            class="button button-light"
+          >
+            <Icon name="route" class="size-5" />
+            規劃前往路線
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-facts">
+        <div>
+          <span>建議停留</span>
+          <strong>60–90 分鐘</strong>
+        </div>
+        <div>
+          <span>推薦時段</span>
+          <strong>日落前抵達</strong>
+        </div>
+        <div>
+          <span>適合</span>
+          <strong>散步・親子・攝影</strong>
+        </div>
+        <div>
+          <span>行程定位</span>
+          <strong>安平最後一站</strong>
+        </div>
+      </div>
+    </div>
+    <p class="photo-credit">
+      安平港北堤夕景・Guanting Chen／CC BY-SA 4.0
+    </p>
+  </section>
+
+  <section class="border-b border-[#173b3f]/10 bg-[#efe5d3]">
+    <div class="shell flex flex-wrap items-center justify-center gap-x-8 gap-y-3 py-4 text-xs font-semibold text-[#173b3f]/64 sm:justify-between">
+      <span class="inline-flex items-center gap-2"><Icon name="sun" class="size-4 text-[#e98a4a]" /> 日落前 45–60 分鐘抵達</span>
+      <span class="inline-flex items-center gap-2"><Icon name="shield" class="size-4 text-[#e98a4a]" /> 不建議下水游泳</span>
+      <span class="inline-flex items-center gap-2"><Icon name="car" class="size-4 text-[#e98a4a]" /> 假日提早找停車</span>
+      <span class="inline-flex items-center gap-2"><Icon name="route" class="size-4 text-[#e98a4a]" /> 回程比去程更重要</span>
+    </div>
+  </section>
+
+  <section class="weather-section py-16 sm:py-20">
+    <div class="shell">
+      <WeatherCard />
+    </div>
+  </section>
+
+  <section class="py-20 sm:py-28">
+    <div class="shell">
+      <div class="grid items-end gap-6 md:grid-cols-[1fr_auto]">
+        <div>
+          <h2 class="section-title">出發前，先回答四個問題</h2>
+        </div>
+        <p class="section-lead md:max-w-sm">
+          不用先讀完整本攻略。先把時間、停留、交通與海邊安全想清楚，就能做出適合今天的決定。
+        </p>
+      </div>
+
+      <div class="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        {
+          quickCards.map((card) => (
+            <a href={card.href} class="quick-card group">
+              <div class="flex items-center justify-between">
+                <span class="quick-icon"><Icon name={card.icon} class="size-5" /></span>
+                <span class="text-[.64rem] font-bold tracking-[.18em] text-[#173b3f]/25">{card.number}</span>
+              </div>
+              <h3>{card.title}</h3>
+              <p>{card.text}</p>
+              <span class="mt-auto inline-flex items-center gap-2 pt-5 text-xs font-bold text-[#2e6f73]">
+                查看指南
+                <Icon name="arrow" class="size-4 transition-transform group-hover:translate-x-1" />
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="overflow-hidden bg-white/55 py-20 sm:py-28">
+    <div class="shell grid items-center gap-12 lg:grid-cols-[1.05fr_.95fr]">
+      <div class="coast-photo-wrap">
+        <Image
+          src={coastImage}
+          alt="觀夕平台海岸、沙灘與安平燈塔"
+          widths={[640, 960, 1280]}
+          sizes="(min-width: 1024px) 52vw, 100vw"
+          loading="lazy"
+          class="size-full object-cover"
+        />
+        <div class="coast-stamp">
+          <Icon name="wave" class="size-7" />
+          <span>海岸・平台・防風林</span>
+        </div>
+        <p class="image-credit">觀夕平台・ScoutT7／CC BY-SA 4.0</p>
+      </div>
+
+      <div>
+        <h2 class="section-title">不是只看一顆太陽</h2>
+        <p class="section-lead mt-5">
+          觀夕平台的風景，來自港灣、海面、沙岸與人的共同變化。提早一點抵達，才有時間看見完整的黃昏。
+        </p>
+        <div class="mt-8 grid gap-3 sm:grid-cols-2">
+          {
+            activities.map((item) => (
+              <div class="activity-card">
+                <Icon name={item.icon} class="size-5 text-[#e98a4a]" />
+                <div>
+                  <h3>{item.title}</h3>
+                  <p>{item.text}</p>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+        <a href="/guide/" class="text-link mt-7 inline-flex items-center gap-2">
+          第一次來，現場怎麼走
+          <Icon name="arrow" class="size-4" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="route-section">
+    <div class="route-glow" aria-hidden="true"></div>
+    <div class="shell relative z-10 py-20 sm:py-28">
+      <div class="grid items-end gap-6 md:grid-cols-[1fr_auto]">
+        <div>
+          <h2 class="section-title !text-white">把時間留給光線變化</h2>
+        </div>
+        <p class="max-w-md text-sm leading-7 text-white/58">
+          三條路線沒有必走的打卡順序，依同行者、風勢與回程彈性選擇即可。
+        </p>
+      </div>
+
+      <div class="mt-12 grid gap-4 lg:grid-cols-3">
+        {
+          routes.map((route, index) => (
+            <div class="route-card">
+              <div class="flex items-start justify-between gap-4">
+                <span class="route-duration">{route.duration}</span>
+                <span class="route-index">0{index + 1}</span>
+              </div>
+              <h3>{route.title}</h3>
+              <ol>
+                {route.steps.map((step, stepIndex) => (
+                  <li>
+                    <span>{stepIndex + 1}</span>
+                    {step}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))
+        }
+      </div>
+      <a href="/guide/" class="mt-8 inline-flex items-center gap-2 text-sm font-bold text-[#f5ab78]">
+        查看完整 60、90、120 分鐘路線
+        <Icon name="arrow" class="size-4" />
+      </a>
+    </div>
+  </section>
+
+  <section class="py-20 sm:py-28">
+    <div class="shell grid gap-12 lg:grid-cols-[.85fr_1.15fr]">
+      <div>
+        <h2 class="section-title">去程只是前半段</h2>
+        <p class="section-lead mt-5">
+          自駕要算停車，搭公車要看回程，叫車要先找好上車點。日落後再開始找路，往往比想像中慌亂。
+        </p>
+        <div class="mt-8">
+          <MapActions />
+        </div>
+        <a href="/transport-parking/" class="text-link mt-7 inline-flex items-center gap-2">
+          查看完整交通與停車指南
+          <Icon name="arrow" class="size-4" />
+        </a>
+      </div>
+
+      <div class="map-embed">
+        <iframe
+          src={site.maps.embed}
+          title="觀夕平台 Google 地圖"
+          width="600"
+          height="450"
+          style="border:0;"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="strict-origin-when-cross-origin"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="pb-20 sm:pb-28">
+    <div class="shell">
+      <SafetyAlert />
+    </div>
+  </section>
+
+  <section class="bg-[#eee3d0] py-20 sm:py-28">
+    <div class="shell">
+      <div class="grid items-end gap-6 md:grid-cols-[1fr_auto]">
+        <div>
+          <h2 class="section-title">白天讀安平，傍晚去看海</h2>
+        </div>
+        <a href="/nearby/" class="text-link inline-flex items-center gap-2">
+          查看全部附近景點
+          <Icon name="arrow" class="size-4" />
+        </a>
+      </div>
+
+      <div class="nearby-grid mt-12">
+        <a href="/nearby/#安平古堡與安平老街" class="nearby-card nearby-card-wide group">
+          <Image
+            src={oldStreetImage}
+            alt="安平老街古堡街的小吃店與街道"
+            widths={[640, 960, 1280]}
+            sizes="(min-width: 768px) 66vw, 100vw"
+            loading="lazy"
+            class="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+          <span class="nearby-shade"></span>
+          <div>
+            <small>第一站・經典安平</small>
+            <h3>安平古堡 × 老街</h3>
+            <p>歷史、小吃與巷弄，最適合排在看夕陽之前。</p>
+          </div>
+          <span class="image-credit">Chongkian／CC BY-SA 4.0</span>
+        </a>
+
+        <a href="/nearby/#安平樹屋與德記洋行" class="nearby-card nearby-card-tall group">
+          <Image
+            src={treeHouseImage}
+            alt="安平樹屋內垂落的榕樹氣根與舊倉庫"
+            widths={[480, 720, 960]}
+            sizes="(min-width: 768px) 34vw, 100vw"
+            loading="lazy"
+            class="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+          <span class="nearby-shade"></span>
+          <div>
+            <small>樹根與時間</small>
+            <h3>安平樹屋</h3>
+            <p>在建築與榕樹之間，感受安平的另一種光影。</p>
+          </div>
+          <span class="image-credit">Sun Taro／CC BY-SA 2.0</span>
+        </a>
+
+        <a href="/food/" class="nearby-card nearby-card-food group">
+          <Image
+            src={foodImage}
+            alt="安平老街販售糕餅、蜜餞與傳統零食的攤位"
+            widths={[480, 720, 960]}
+            sizes="(min-width: 768px) 34vw, 100vw"
+            loading="lazy"
+            class="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+          <span class="nearby-shade"></span>
+          <div>
+            <small>夕陽前後</small>
+            <h3>安平小吃與晚餐</h3>
+            <p>白天吃老街，日落後找一碗熱湯。</p>
+          </div>
+          <span class="image-credit">Mx. Granger／CC0</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 sm:py-28">
+    <div class="shell grid gap-12 lg:grid-cols-[.8fr_1.2fr]">
+      <div>
+        <h2 class="section-title">出發前常見問題</h2>
+        <p class="section-lead mt-5">
+          設施、交通與開放狀態可能調整；以下先提供旅程判斷，當天仍要再次確認。
+        </p>
+        <a href="/faq/" class="text-link mt-7 inline-flex items-center gap-2">
+          查看完整 20 題 FAQ
+          <Icon name="arrow" class="size-4" />
+        </a>
+      </div>
+      <div class="faq-list">
+        {
+          faqItems.slice(0, 6).map((item, index) => (
+            <details class="faq-item" open={index === 0}>
+              <summary>
+                <span>{item.question}</span>
+                <span class="faq-plus" aria-hidden="true">＋</span>
+              </summary>
+              <p>{item.answer}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="pb-20 sm:pb-28">
+    <div class="shell">
+      <StatusNotice />
+      <div class="mt-6 flex flex-wrap items-center justify-end gap-4 text-xs text-[#173b3f]/50">
+        <a href="/sources/" class="inline-flex items-center gap-1.5 font-bold text-[#2e6f73]">
+          查看資料來源與圖片授權
+          <Icon name="arrow" class="size-4" />
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .home-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: #172a3a;
+  }
+
+  .home-hero-picture,
+  .home-hero-picture :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .home-hero-overlay {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgb(10 32 37 / 94%) 0%, rgb(10 32 37 / 70%) 48%, rgb(10 32 37 / 25%) 75%),
+      linear-gradient(0deg, rgb(10 32 37 / 87%) 0%, transparent 48%),
+      linear-gradient(180deg, rgb(10 32 37 / 32%), transparent 25%);
+  }
+
+  .hero-sun {
+    position: absolute;
+    z-index: 2;
+    top: 16%;
+    right: 11%;
+    width: clamp(5rem, 10vw, 9rem);
+    aspect-ratio: 1;
+    border: 1px solid rgb(255 255 255 / 22%);
+    border-radius: 50%;
+    box-shadow: 0 0 0 2rem rgb(233 138 74 / 4%);
+  }
+
+  .hero-title {
+    color: white;
+    font-weight: 650;
+    letter-spacing: -.065em;
+    line-height: .92;
+  }
+
+  .hero-title span {
+    display: block;
+    font-size: clamp(4rem, 12vw, 9.5rem);
+  }
+
+  .hero-title small {
+    display: block;
+    margin-top: 1.1rem;
+    color: rgb(255 255 255 / 82%);
+    font-size: clamp(1.35rem, 4vw, 2.7rem);
+    font-weight: 520;
+    letter-spacing: -.035em;
+    line-height: 1.2;
+  }
+
+  .hero-facts {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    max-width: 880px;
+    margin-top: 3.25rem;
+    overflow: hidden;
+    border: 1px solid rgb(255 255 255 / 14%);
+    border-radius: 1.25rem;
+    background: rgb(255 255 255 / 7%);
+    backdrop-filter: blur(14px);
+  }
+
+  .hero-facts div {
+    padding: .95rem 1rem;
+  }
+
+  .hero-facts div + div {
+    border-left: 1px solid rgb(255 255 255 / 12%);
+  }
+
+  .hero-facts span,
+  .hero-facts strong {
+    display: block;
+  }
+
+  .hero-facts span {
+    margin-bottom: .3rem;
+    color: rgb(255 255 255 / 47%);
+    font-size: .6rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+  }
+
+  .hero-facts strong {
+    color: white;
+    font-size: .82rem;
+    font-weight: 650;
+  }
+
+  .photo-credit {
+    position: absolute;
+    z-index: 4;
+    right: 1rem;
+    bottom: .8rem;
+    color: rgb(255 255 255 / 42%);
+    font-size: .55rem;
+  }
+
+  .quick-card {
+    display: flex;
+    min-height: 285px;
+    flex-direction: column;
+    padding: 1.45rem;
+    border: 1px solid rgb(23 59 63 / 11%);
+    border-radius: 1.4rem;
+    background: rgb(255 255 255 / 60%);
+    color: #173b3f;
+    transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+  }
+
+  .quick-card:hover {
+    border-color: rgb(46 111 115 / 32%);
+    background: white;
+    transform: translateY(-5px);
+  }
+
+  .quick-icon {
+    display: grid;
+    width: 2.7rem;
+    height: 2.7rem;
+    place-items: center;
+    border-radius: 999px;
+    background: rgb(233 138 74 / 14%);
+    color: #d66f2a;
+  }
+
+  .quick-card h3 {
+    margin-top: 1.7rem;
+    font-size: 1.15rem;
+    font-weight: 720;
+  }
+
+  .quick-card p {
+    margin-top: .8rem;
+    color: rgb(23 59 63 / 62%);
+    font-size: .85rem;
+    line-height: 1.8;
+  }
+
+  .coast-photo-wrap {
+    position: relative;
+    min-height: 520px;
+    overflow: hidden;
+    border-radius: 1.8rem;
+    box-shadow: 0 28px 70px rgb(23 59 63 / 17%);
+  }
+
+  .coast-stamp {
+    position: absolute;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+    padding: .7rem .9rem;
+    border: 1px solid rgb(255 255 255 / 20%);
+    border-radius: 999px;
+    background: rgb(23 59 63 / 78%);
+    color: white;
+    font-size: .7rem;
+    font-weight: 700;
+    backdrop-filter: blur(12px);
+  }
+
+  .image-credit {
+    position: absolute;
+    right: .65rem;
+    bottom: .45rem;
+    z-index: 3;
+    color: rgb(255 255 255 / 52%);
+    font-size: .5rem;
+  }
+
+  .coast-photo-wrap .image-credit {
+    right: auto;
+    bottom: .65rem;
+    left: .85rem;
+  }
+
+  .activity-card {
+    display: flex;
+    gap: .8rem;
+    padding: 1rem;
+    border: 1px solid rgb(23 59 63 / 9%);
+    border-radius: 1rem;
+    background: rgb(255 255 255 / 66%);
+  }
+
+  .activity-card svg {
+    flex: none;
+    margin-top: .15rem;
+  }
+
+  .activity-card h3 {
+    color: #173b3f;
+    font-size: .9rem;
+    font-weight: 730;
+  }
+
+  .activity-card p {
+    margin-top: .3rem;
+    color: rgb(23 59 63 / 56%);
+    font-size: .76rem;
+    line-height: 1.6;
+  }
+
+  .route-section {
+    position: relative;
+    overflow: hidden;
+    background:
+      linear-gradient(115deg, rgb(23 42 58 / 98%), rgb(23 59 63 / 96%)),
+      #172a3a;
+  }
+
+  .route-glow {
+    position: absolute;
+    top: -12rem;
+    right: -10rem;
+    width: 46rem;
+    height: 46rem;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgb(233 138 74 / 28%), transparent 65%);
+  }
+
+  .route-card {
+    padding: 1.5rem;
+    border: 1px solid rgb(255 255 255 / 11%);
+    border-radius: 1.35rem;
+    background: rgb(255 255 255 / 6%);
+    color: white;
+  }
+
+  .route-duration {
+    color: #f5ab78;
+    font-size: .65rem;
+    font-weight: 800;
+    letter-spacing: .18em;
+  }
+
+  .route-index {
+    color: rgb(255 255 255 / 18%);
+    font-size: 1.6rem;
+    font-weight: 700;
+  }
+
+  .route-card h3 {
+    margin-top: 2.2rem;
+    font-size: 1.35rem;
+    font-weight: 650;
+  }
+
+  .route-card ol {
+    margin-top: 1.25rem;
+  }
+
+  .route-card li {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    padding-block: .65rem;
+    border-top: 1px solid rgb(255 255 255 / 8%);
+    color: rgb(255 255 255 / 62%);
+    font-size: .8rem;
+  }
+
+  .route-card li span {
+    display: grid;
+    width: 1.45rem;
+    height: 1.45rem;
+    place-items: center;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 8%);
+    color: rgb(255 255 255 / 72%);
+    font-size: .6rem;
+  }
+
+  .map-embed {
+    position: relative;
+    min-height: 520px;
+    overflow: hidden;
+    border: 1px solid rgb(23 59 63 / 10%);
+    border-radius: 1.8rem;
+    background: #e8decb;
+    box-shadow: 0 14px 30px rgb(23 59 63 / 24%);
+  }
+
+  .map-embed iframe {
+    display: block;
+    width: 100%;
+    height: 520px;
+  }
+
+  .nearby-grid {
+    display: grid;
+    grid-template-columns: 1.25fr .75fr;
+    grid-template-rows: 260px 260px;
+    gap: .85rem;
+  }
+
+  .nearby-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.35rem;
+    color: white;
+  }
+
+  .nearby-card-wide {
+    grid-row: 1 / 3;
+  }
+
+  .nearby-shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgb(10 32 37 / 85%), transparent 65%);
+  }
+
+  .nearby-card > div {
+    position: absolute;
+    z-index: 2;
+    right: 1.3rem;
+    bottom: 1.25rem;
+    left: 1.3rem;
+  }
+
+  .nearby-card small {
+    color: #f5ab78;
+    font-size: .6rem;
+    font-weight: 800;
+    letter-spacing: .14em;
+  }
+
+  .nearby-card h3 {
+    margin-top: .35rem;
+    font-size: 1.35rem;
+    font-weight: 650;
+  }
+
+  .nearby-card p {
+    margin-top: .4rem;
+    color: rgb(255 255 255 / 65%);
+    font-size: .72rem;
+    line-height: 1.55;
+  }
+
+  .faq-list {
+    border-top: 1px solid rgb(23 59 63 / 13%);
+  }
+
+  .faq-item {
+    border-bottom: 1px solid rgb(23 59 63 / 13%);
+  }
+
+  .faq-item summary {
+    display: flex;
+    min-height: 72px;
+    cursor: pointer;
+    list-style: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    color: #173b3f;
+    font-size: .95rem;
+    font-weight: 700;
+  }
+
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-item p {
+    max-width: 700px;
+    padding: 0 3rem 1.4rem 0;
+    color: rgb(23 59 63 / 62%);
+    font-size: .85rem;
+    line-height: 1.8;
+  }
+
+  .faq-plus {
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    flex: none;
+    place-items: center;
+    border-radius: 50%;
+    background: rgb(46 111 115 / 8%);
+    color: #2e6f73;
+    font-size: 1rem;
+    transition: transform 180ms ease;
+  }
+
+  .faq-item[open] .faq-plus {
+    transform: rotate(45deg);
+  }
+
+  @media (max-width: 767px) {
+    .home-hero-overlay {
+      background:
+        linear-gradient(0deg, rgb(10 32 37 / 93%) 0%, rgb(10 32 37 / 45%) 68%, rgb(10 32 37 / 3%)),
+        linear-gradient(90deg, rgb(10 32 37 / 55%), transparent);
+    }
+
+    .hero-sun {
+      top: 10%;
+      right: 8%;
+    }
+
+    .hero-facts {
+      grid-template-columns: 1fr 1fr;
+      margin-top: 2rem;
+    }
+
+    .hero-facts div + div {
+      border-left: 0;
+    }
+
+    .hero-facts div:nth-child(2),
+    .hero-facts div:nth-child(4) {
+      border-left: 1px solid rgb(255 255 255 / 12%);
+    }
+
+    .hero-facts div:nth-child(n+3) {
+      border-top: 1px solid rgb(255 255 255 / 12%);
+    }
+
+    .photo-credit {
+      display: none;
+    }
+
+    .quick-card {
+      min-height: 240px;
+    }
+
+    .coast-photo-wrap {
+      min-height: 390px;
+    }
+
+    .map-embed {
+      min-height: 400px;
+    }
+
+    .map-embed iframe {
+      height: 400px;
+    }
+
+    .nearby-grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: 360px 320px 320px;
+    }
+
+    .nearby-card-wide {
+      grid-row: auto;
+    }
+  }
+</style>
