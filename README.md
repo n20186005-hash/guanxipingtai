@@ -8,7 +8,7 @@
 - Tailwind CSS 4
 - Markdown Content Collections
 - pnpm
-- Cloudflare Pages
+- Cloudflare Workers（Static Assets + Worker 入口 `src/worker.js`）
 - 系統字體，不載入外部字型
 - 無資料庫、登入、預訂或付款功能
 
@@ -26,14 +26,21 @@ pnpm build
 pnpm preview
 ```
 
-## Cloudflare Pages
+以 Workers 模式在本機模擬（含 `/api/weather` 與靜態資源）：
 
-- Build command：`pnpm build`
-- Build output directory：`dist`
-- Node.js：24
-- Root directory：專案根目錄
+```bash
+pnpm build
+pnpm cf:dev
+```
 
-`wrangler.jsonc` 已設定 `pages_build_output_dir`，不需要任何資料庫或執行階段綁定。
+## Cloudflare Workers
+
+- 建置命令：`pnpm build`（輸出至 `dist`）
+- Worker 入口：`src/worker.js`
+- 靜態資源：`wrangler.jsonc` 的 `assets.directory = ./dist`，綁定名稱 `ASSETS`
+- 部署：`pnpm deploy`（`wrangler deploy`）
+- `functions/api/weather.js`（Pages Functions）已改寫為 `src/worker.js` + `src/weather.js`，
+  原 `_headers` / `_redirects` 的安全回應頭與 www→apex 轉址改由 Worker 腳本處理。
 
 ## 內容與圖片
 

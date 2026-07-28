@@ -167,8 +167,9 @@ function upstreamUrl() {
   return url;
 }
 
-export async function onRequestGet(context) {
-  const requestUrl = new URL(context.request.url);
+// Worker 入口处理函数：取代原 Pages Functions 的 onRequestGet(context)
+export async function handleWeather(request, ctx) {
+  const requestUrl = new URL(request.url);
   const cacheKey = new Request(`${requestUrl.origin}${requestUrl.pathname}`, { method: 'GET' });
   const cache = caches.default;
   const cached = await cache.match(cacheKey);
@@ -188,7 +189,7 @@ export async function onRequestGet(context) {
       }
     });
 
-    context.waitUntil(cache.put(cacheKey, response.clone()));
+    ctx.waitUntil(cache.put(cacheKey, response.clone()));
     return response;
   } catch (error) {
     console.error(
