@@ -12,8 +12,25 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content, headings } = await render(entry);
+const slug = entry.id.replace(/\.mdx?$/, '');
+
+const faq =
+  slug === 'faq'
+    ? (entry.body ?? '')
+        .split(/\n(?=##\s)/)
+        .map((block) => block.trim())
+        .filter((block) => block.startsWith('## '))
+        .map((block) => {
+          const [headingLine, ...rest] = block.split('\n');
+          return {
+            question: headingLine.replace(/^##\s+/, '').trim(),
+            answer: rest.join(' ').replace(/\s+/g, ' ').trim()
+          };
+        })
+        .filter((item) => item.question.length > 0 && item.answer.length > 0)
+    : [];
 ---
 
-<GuideLayout entry={entry} headings={headings}>
+<GuideLayout entry={entry} headings={headings} faq={faq}>
   <Content />
 </GuideLayout>

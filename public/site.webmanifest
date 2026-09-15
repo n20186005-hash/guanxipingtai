@@ -1,16 +1,69 @@
 {
+  "id": "/",
   "name": "觀夕平台旅遊指南",
   "short_name": "觀夕平台",
+  "description": "臺南安平觀夕平台旅遊指南：夕陽時段、交通停車、現場玩法、海邊安全、附近美食與順遊行程。",
   "lang": "zh-Hant-TW",
+  "dir": "ltr",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "portrait-primary",
   "background_color": "#f6f0e4",
   "theme_color": "#173b3f",
+  "categories": ["travel", "navigation", "lifestyle"],
   "icons": [
     {
       "src": "/favicon.svg",
       "sizes": "any",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "交通與停車",
+      "short_name": "交通停車",
+      "url": "/transport-parking/"
+    },
+    {
+      "name": "最佳遊覽時間",
+      "short_name": "最佳時間",
+      "url": "/best-time/"
+    },
+    {
+      "name": "訪客服務與周邊設施",
+      "short_name": "訪客設施",
+      "url": "/facilities/"
+    },
+    {
+      "name": "海岸科普與訪客責任",
+      "short_name": "海岸科普",
+      "url": "/coast-science/"
+    },
+    {
+      "name": "實用 FAQ",
+      "short_name": "FAQ",
+      "url": "/faq/"
     }
   ]
 }

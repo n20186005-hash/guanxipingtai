@@ -1,0 +1,887 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import MapActions from '../components/MapActions.astro';
+import SafetyAlert from '../components/SafetyAlert.astro';
+import { allGuides, site } from '../data/site';
+import {
+  SUN_SITE,
+  compassName,
+  daysInMonth,
+  formatClock,
+  getSunTimes,
+  weekdayLabel,
+  type SunTimes
+} from '../lib/sun';
+
+/** 建置當下以臺北時區判定的日曆日，避免受建置主機時區影響 */
+const taipeiNow = new Date(Date.now() + SUN_SITE.utcOffset * 3600 * 1000);
+const buildYear = taipeiNow.getUTCFullYear();
+const buildMonth = taipeiNow.getUTCMonth();
+const buildDay = taipeiNow.getUTCDate();
+
+const pad = (value: number) => String(value).padStart(2, '0');
+const buildDateText = `${buildYear} 年 ${buildMonth + 1} 月 ${buildDay} 日`;
+const dateText = (iso: string) => {
+  const [, month, day] = iso.split('-');
+  return `${Number(month)}/${Number(day)}`;
+};
+const monthDayText = (iso: string) => {
+  const [year, month, day] = iso.split('-');
+  return `${year} 年 ${Number(month)} 月 ${Number(day)} 日`;
+};
+
+/** 把分鐘差輸出為「約 30 分鐘」 */
+const durationText = (minutes: number | null) => {
+  if (minutes === null) return '—';
+  const rounded = Math.round(minutes);
+  return rounded <= 0 ? '—' : `約 ${rounded} 分鐘`;
+};
+
+const sunTimesOfMonth = (year: number, month: number) =>
+  Array.from({ length: daysInMonth(year, month) }, (_, index) =>
+    getSunTimes(year, month, index + 1)
+  );
+
+/** 逐日表涵蓋建置當月與次月，合計約兩個月 */
+const monthBlocks = [0, 1].map((offset) => {
+  const anchor = new Date(Date.UTC(buildYear, buildMonth + offset, 1));
+  const year = anchor.getUTCFullYear();
+  const month = anchor.getUTCMonth();
+  return {
+    key: `${year}-${pad(month + 1)}`,
+    label: `${year} 年 ${month + 1} 月`,
+    isBuildMonth: offset === 0,
+    days: sunTimesOfMonth(year, month)
+  };
+});
+
+const yearDays = Array.from({ length: 12 }, (_, month) => sunTimesOfMonth(buildYear, month)).flat();
+
+const extreme = (
+  days: SunTimes[],
+  pick: (day: SunTimes) => number | null,
+  mode: 'earliest' | 'latest'
+) =>
+  days.reduce<{ value: number | null; date: string }>(
+    (best, day) => {
+      const value = pick(day);
+      if (value === null) return best;
+      if (best.value === null) return { value, date: day.date };
+      const better = mode === 'earliest' ? value < best.value : value > best.value;
+      return better ? { value, date: day.date } : best;
+    },
+    { value: null, date: '' }
+  );
+
+const earliestSunset = extreme(yearDays, (day) => day.sunset, 'earliest');
+const latestSunset = extreme(yearDays, (day) => day.sunset, 'latest');
+const earliestSunrise = extreme(yearDays, (day) => day.sunrise, 'earliest');
+const latestSunrise = extreme(yearDays, (day) => day.sunrise, 'latest');
+
+const monthlyRows = Array.from({ length: 12 }, (_, month) => {
+  const prefix = `${buildYear}-${pad(month + 1)}`;
+  const days = yearDays.filter((day) => day.date.startsWith(prefix));
+  const mid = days[14] ?? days[0];
+  const azimuths = days
+    .map((day) => day.sunsetAzimuth)
+    .filter((value): value is number => value !== null);
+
+  return {
+    label: `${month + 1} 月`,
+    isBuildMonth: month === buildMonth,
+    sunrise: mid.sunrise,
+    sunset: mid.sunset,
+    earliest: extreme(days, (day) => day.sunset, 'earliest').value,
+    latest: extreme(days, (day) => day.sunset, 'latest').value,
+    azimuthFrom: azimuths.length > 0 ? Math.floor(Math.min(...azimuths)) : null,
+    azimuthTo: azimuths.length > 0 ? Math.ceil(Math.max(...azimuths)) : null
+  };
+});
+
+const buildDayTimes = getSunTimes(buildYear, buildMonth, buildDay);
+
+const relatedLinks = ['best-time', 'photography', 'transport-parking', 'safety', 'faq']
+  .map((slug) => allGuides.find((guide) => guide.href === `/${slug}/`))
+  .filter((guide): guide is NonNullable<typeof guide> => Boolean(guide));
+
+const pageTitle = `觀夕平台日落時間表｜臺南安平每日日落、日出與黃金時刻（${buildYear}）`;
+const pageDescription = `臺南安平觀夕平台逐日日落時間表：列出${buildYear} 年每日日出、日落、日落方位與黃金時刻，並說明為什麼最晚日落不在夏至。數值以 NOAA 太陽位置演算法依觀夕平台座標（22.9901592, 120.1470983）計算，誤差約在 1 分鐘內。`;
+
+const faqs = [
+  {
+    question: '觀夕平台今天的日落時間是幾點？',
+    answer: `每天都不一樣。本頁上方的「今天」卡片會自動對照下方的逐日表格，顯示當日日落、日出、黃金時刻、日落方位與建議抵達時間。若卡片顯示資料已超出表格範圍，代表本站已有一段時間未更新，請改查中央氣象署的日出日沒時刻表。`
+  },
+  {
+    question: `觀夕平台${buildYear} 年的日落時間範圍是多少？`,
+    answer: `依觀夕平台座標計算，${buildYear} 年的日落時間介於 ${formatClock(earliestSunset.value)} 與 ${formatClock(latestSunset.value)} 之間，全年的日落都落在下午五點到晚上七點之間。最早出現在 ${monthDayText(earliestSunset.date)}，最晚出現在 ${monthDayText(latestSunset.date)}。`
+  },
+  {
+    question: '為什麼最晚日落不在夏至、最早日落也不在冬至？',
+    answer: `因為日落的鐘錶時間同時受兩個因素影響：太陽赤緯（季節）與時差方程式（地球軌道離心率與黃赤交角造成的偏差）。兩者疊加後，最晚日落會落在夏至之後約兩週、最早日落會落在冬至之前約三週。${buildYear} 年的計算結果正是如此：最晚日落 ${monthDayText(latestSunset.date)}、最早日落 ${monthDayText(earliestSunset.date)}。`
+  },
+  {
+    question: '日落方位角有什麼用？',
+    answer: `方位角是太陽落海時相對正北的角度，用來決定站位與構圖。觀夕平台面向西側臺灣海峽，日落方位全年大致在 ${monthlyRows[0].azimuthFrom}° 到 ${monthlyRows[5].azimuthTo}° 之間移動：夏季偏北、冬季偏南，春秋接近正西。想在畫面裡同時放進落日與堤防或沙岸，就要先確認當日方位角。`
+  },
+  {
+    question: '建議幾點抵達觀夕平台？',
+    answer: '一般旅客可在日落前 45–60 分鐘抵達；自駕、週末或連假可再提早 20–30 分鐘以避開停車與人潮。想拍到完整光線變化，可在日落前約 70–90 分鐘到場。'
+  },
+  {
+    question: '這個日落時間表是怎麼算出來的？',
+    answer: `本頁以 NOAA Solar Calculator 使用的標準公式鏈計算，輸入為觀夕平台座標（${SUN_SITE.latitude}, ${SUN_SITE.longitude}）與固定時區 UTC+8。計算結果與中央氣象署公告值相比通常在 1 分鐘以內；表格反映的是平坦地平線的理論時刻，實際可見日落會因雲層、遠方堤防與建築略為提前。`
+  }
+];
+
+const forFaqSchema = (text: string) => text.replace(/\s+/g, ' ').trim();
+
+const schemas: object[] = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: `觀夕平台日落時間表（${buildYear}）`,
+    description: pageDescription,
+    inLanguage: 'zh-Hant-TW',
+    dateModified: new Date().toISOString(),
+    mainEntityOfPage: `${site.url}/sunset-time/`,
+    about: {
+      '@type': 'TouristAttraction',
+      name: site.officialName,
+      url: site.url,
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: site.coordinates.latitude,
+        longitude: site.coordinates.longitude
+      }
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: site.fullName,
+      url: site.url
+    }
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: '首頁', item: site.url },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: '日落時間表',
+        item: `${site.url}/sunset-time/`
+      }
+    ]
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: { '@type': 'Answer', text: forFaqSchema(item.answer) }
+    }))
+  }
+];
+
+const toc = [
+  { id: 'today', text: '今天的日落時間' },
+  { id: 'daily', text: '逐日日落時間表' },
+  { id: 'year', text: '全年日落時間總覽' },
+  { id: 'why', text: '為什麼每天都不一樣' },
+  { id: 'azimuth', text: '日落方位與構圖' },
+  { id: 'light', text: '黃金時刻與藍調時刻' },
+  { id: 'plan', text: '依日落時間安排行程' },
+  { id: 'method', text: '計算方式與誤差' },
+  { id: 'faq', text: '常見問題' }
+];
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} type="article" structuredData={schemas}>
+  <header class="guide-hero guide-hero-dusk">
+    <div class="guide-orb" aria-hidden="true"></div>
+    <div class="shell relative z-10 py-14 sm:py-20">
+      <nav class="breadcrumb" aria-label="麵包屑">
+        <a href="/">首頁</a>
+        <span aria-hidden="true">／</span>
+        <span>時間與光線</span>
+      </nav>
+      <h1
+        class="mt-8 max-w-4xl text-balance text-[clamp(2.25rem,6vw,4.8rem)] font-semibold leading-[1.08] tracking-[-.045em] text-white"
+      >
+        觀夕平台日落時間表
+      </h1>
+      <p class="mt-6 max-w-2xl text-base leading-8 text-white/72 sm:text-lg">
+        逐日列出臺南安平觀夕平台的日出、日落、日落方位與黃金時刻，並說明為什麼最晚日落不在夏至。所有時間以 UTC+8 計算，可直接對照你的出發時刻。
+      </p>
+      <div class="mt-8 flex flex-wrap items-center gap-4 text-xs text-white/55">
+        <span class="inline-flex items-center gap-2">
+          <Icon name="sun" class="size-4" />
+          太陽時刻計算 · 誤差 1 分鐘內
+        </span>
+        <span aria-hidden="true">•</span>
+        <span>資料建置日 {buildDateText}</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="shell grid gap-10 py-12 lg:grid-cols-[minmax(0,1fr)_280px] lg:py-20">
+    <article class="min-w-0">
+      <div class="article-content">
+        <h2 id="today">今天的日落時間</h2>
+        <p>
+          下面這張卡片會自動抓出今天在逐日表格裡的對應列。表格涵蓋 {monthBlocks[0].label} 與{' '}
+          {monthBlocks[1].label}，因此在資料建置後約兩個月內都能正確顯示當日數值。
+        </p>
+
+        <div class="sun-now" data-sun-now>
+          <div class="sun-now-main">
+            <p class="sun-now-kicker" data-sun-kicker>本頁建置日</p>
+            <p class="sun-now-date" data-sun-date>{buildDateText}</p>
+            <p class="sun-now-value">
+              <span data-sun-sunset>{formatClock(buildDayTimes.sunset)}</span>
+              <small>日落</small>
+            </p>
+          </div>
+          <dl class="sun-now-grid">
+            <div>
+              <dt>日出</dt>
+              <dd data-sun-sunrise>{formatClock(buildDayTimes.sunrise)}</dd>
+            </div>
+            <div>
+              <dt>黃金時刻</dt>
+              <dd data-sun-golden>{formatClock(buildDayTimes.goldenHour)}</dd>
+            </div>
+            <div>
+              <dt>日落方位</dt>
+              <dd data-sun-azimuth>
+                {buildDayTimes.sunsetAzimuth === null
+                  ? '—'
+                  : `${buildDayTimes.sunsetAzimuth.toFixed(1)}° ${compassName(buildDayTimes.sunsetAzimuth)}`}
+              </dd>
+            </div>
+            <div>
+              <dt>建議抵達</dt>
+              <dd data-sun-arrive>
+                {formatClock(buildDayTimes.sunset === null ? null : buildDayTimes.sunset - 60)}
+              </dd>
+            </div>
+          </dl>
+          <p class="sun-now-note" data-sun-note hidden>
+            逐日表格未涵蓋今天，代表本頁已有一段時間未更新。請以
+            <a href="https://www.cwa.gov.tw/" target="_blank" rel="noreferrer">中央氣象署</a>
+            的日出日沒時刻表為準，或稍後再回來查看。
+          </p>
+        </div>
+
+        <p class="text-sm">
+          需要官方數值時，請查<a href="https://www.cwa.gov.tw/" target="_blank" rel="noreferrer"
+            >中央氣象署</a
+          >；想知道季節與體感的差異，可接著讀<a href="/best-time/">最佳時間與四季遊覽策略</a>。
+        </p>
+
+        <h2 id="daily">逐日日落時間表</h2>
+        <p>
+          表中「黃金時刻」指太陽降到高度 +6° 的時刻，也就是暖色光開始明顯的起點；「建議抵達」為日落前 60
+          分鐘。方位角以正北為 0°、順時針量測。
+        </p>
+
+        {
+          monthBlocks.map((block) => (
+            <section class="sun-block">
+              <div class="sun-block-head">
+                <h3>
+                  {block.label}
+                  {block.isBuildMonth && <span class="sun-chip">建置當月</span>}
+                </h3>
+                <p>
+                  共 {block.days.length} 天 · 日落 {formatClock(block.days[0].sunset)}（1 日）→{' '}
+                  {formatClock(block.days[block.days.length - 1].sunset)}（{block.days.length} 日）
+                </p>
+              </div>
+              <div class="sun-table-wrap">
+                <table class="sun-table">
+                  <caption>{block.label}觀夕平台每日日出、日落與日落方位（UTC+8）</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">日期</th>
+                      <th scope="col">日出</th>
+                      <th scope="col">日落</th>
+                      <th scope="col">日落方位</th>
+                      <th scope="col">黃金時刻</th>
+                      <th scope="col">建議抵達</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {block.days.map((day) => (
+                      <tr
+                        data-sun-row="true"
+                        data-date={day.date}
+                        data-date-label={dateText(day.date)}
+                        data-sunrise={formatClock(day.sunrise)}
+                        data-sunset={formatClock(day.sunset)}
+                        data-golden={formatClock(day.goldenHour)}
+                        data-arrive={formatClock(
+                          day.sunset === null ? null : day.sunset - 60
+                        )}
+                        data-azimuth-label={
+                          day.sunsetAzimuth === null
+                            ? '—'
+                            : `${day.sunsetAzimuth.toFixed(1)}° ${compassName(day.sunsetAzimuth)}`
+                        }
+                      >
+                        <th scope="row" data-label="日期">
+                          {dateText(day.date)}
+                          <span class="sun-weekday">（{weekdayLabel(day.date)}）</span>
+                        </th>
+                        <td data-label="日出">{formatClock(day.sunrise)}</td>
+                        <td data-label="日落">{formatClock(day.sunset)}</td>
+                        <td data-label="日落方位">
+                          {day.sunsetAzimuth === null
+                            ? '—'
+                            : `${day.sunsetAzimuth.toFixed(1)}° ${compassName(day.sunsetAzimuth)}`}
+                        </td>
+                        <td data-label="黃金時刻">{formatClock(day.goldenHour)}</td>
+                        <td data-label="建議抵達">
+                          {formatClock(day.sunset === null ? null : day.sunset - 60)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          ))
+        }
+
+        <h2 id="year">全年日落時間總覽</h2>
+        <p>
+          下表以每月 15 日為代表日，並列出該月日落最早與最晚的日期值。可以看到日落時間的變化並非等速：春分與秋分前後每天移動最快，夏至與冬至前後最慢。
+        </p>
+        <div class="sun-table-wrap">
+          <table class="sun-table">
+            <caption>{buildYear} 年觀夕平台逐月日出、日落與日落方位範圍</caption>
+            <thead>
+              <tr>
+                <th scope="col">月份</th>
+                <th scope="col">日出（15 日）</th>
+                <th scope="col">日落（15 日）</th>
+                <th scope="col">該月最早日落</th>
+                <th scope="col">該月最晚日落</th>
+                <th scope="col">日落方位範圍</th>
+              </tr>
+            </thead>
+            <tbody>
+              {monthlyRows.map((row) => (
+                <tr class:list={[row.isBuildMonth && 'is-build-month']}>
+                  <th scope="row" data-label="月份">
+                    {row.label}
+                    {row.isBuildMonth && <span class="sun-chip">本月</span>}
+                  </th>
+                  <td data-label="日出（15 日）">{formatClock(row.sunrise)}</td>
+                  <td data-label="日落（15 日）">{formatClock(row.sunset)}</td>
+                  <td data-label="該月最早日落">{formatClock(row.earliest)}</td>
+                  <td data-label="該月最晚日落">{formatClock(row.latest)}</td>
+                  <td data-label="日落方位範圍">
+                    {row.azimuthFrom === null || row.azimuthTo === null
+                      ? '—'
+                      : `${row.azimuthFrom}°–${row.azimuthTo}°`}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="why">為什麼每天的日落時間都不一樣</h2>
+        <p>
+          日落的鐘錶時間同時受兩個因素影響，兩者疊加後就出現「最晚日落不在夏至」的現象：
+        </p>
+        <ul>
+          <li>
+            <strong>太陽赤緯</strong>：地球自轉軸傾斜約 23.4°，使太陽在天空中的位置隨季節南北移動。夏季太陽偏北、白天較長，日落自然較晚。
+          </li>
+          <li>
+            <strong>時差方程式</strong>：地球公轉軌道是橢圓，加上黃赤交角造成的投影效應，使「真太陽時」與「平太陽時」出現最多約 ±16 分鐘的偏差。這個偏差在 11 月初與 2 月中達到極值。
+          </li>
+        </ul>
+        <p>
+          以 {buildYear} 年的計算結果為例：最晚日落落在
+          <strong>{monthDayText(latestSunset.date)}</strong>（{formatClock(latestSunset.value)}），比夏至再晚約兩週；最早日落落在
+          <strong>{monthDayText(earliestSunset.date)}</strong>（{formatClock(earliestSunset.value)}），比冬至提前約三週。日出也有同樣的偏移：最晚日出為
+          {monthDayText(latestSunrise.date)}（{formatClock(latestSunrise.value)}），最早日出為
+          {monthDayText(earliestSunrise.date)}（{formatClock(earliestSunrise.value)}）。
+        </p>
+        <blockquote>
+          <p>
+            實務上的結論：想抓「全年最晚的日落」，六月底到七月初比夏至當天更好；想避開「全年最早的日落」，十一月底就要開始注意，而不是等到十二月。
+          </p>
+        </blockquote>
+
+        <h2 id="azimuth">日落方位與構圖</h2>
+        <p>
+          方位角決定太陽會落在畫面的哪一側。觀夕平台面向西側的臺灣海峽，全年日落都落在海面上，但落點會沿水平線南北移動：
+        </p>
+        <ul>
+          <li>
+            <strong>夏季（5–7 月）</strong>：方位角最大，介於 {monthlyRows[4].azimuthFrom}°–
+            {monthlyRows[6].azimuthTo}°，落在偏西北西的位置，畫面容易同時容納港堤與落日。
+          </li>
+          <li>
+            <strong>春秋（3–4 月、9–10 月）</strong>：方位角接近 270° 正西，構圖最好安排水平線與人物比例。
+          </li>
+          <li>
+            <strong>冬季（11–1 月）</strong>：方位角最小，約 {monthlyRows[10].azimuthFrom}°–
+            {monthlyRows[0].azimuthTo}°，落在偏西南西的位置，沙岸比例改變。
+          </li>
+        </ul>
+        <p>
+          同一個站位在一月與七月拍到的太陽位置不會相同，去年那張照片的構圖無法直接複製。站位、焦段與剪影設定的細節，整理在
+          <a href="/photography/">拍照指南</a>。
+        </p>
+
+        <h2 id="light">黃金時刻與藍調時刻</h2>
+        <p>
+          日落不是一個瞬間，而是一段光線變化。以安平的緯度，日落前後大致會依序經過這幾個階段：
+        </p>
+        <div class="sun-table-wrap">
+          <table class="sun-table">
+            <caption>觀夕平台日落前後的光線階段與可拍攝內容</caption>
+            <thead>
+              <tr>
+                <th scope="col">階段</th>
+                <th scope="col">太陽高度</th>
+                <th scope="col">大約時間</th>
+                <th scope="col">適合拍什麼</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row" data-label="階段">暖場</th>
+                <td data-label="太陽高度">+15° 至 +6°</td>
+                <td data-label="大約時間">日落前 60–90 分鐘</td>
+                <td data-label="適合拍什麼">空景、環境人像、海岸地景</td>
+              </tr>
+              <tr>
+                <th scope="row" data-label="階段">黃金時刻</th>
+                <td data-label="太陽高度">+6° 至 −4°</td>
+                <td data-label="大約時間">
+                  日落前 {durationText(
+                    buildDayTimes.goldenHour === null || buildDayTimes.sunset === null
+                      ? null
+                      : buildDayTimes.sunset - buildDayTimes.goldenHour
+                  )} 至日落後約 15–20 分鐘
+                </td>
+                <td data-label="適合拍什麼">人像、剪影、海面反光</td>
+              </tr>
+              <tr>
+                <th scope="row" data-label="階段">藍調時刻</th>
+                <td data-label="太陽高度">−4° 至 −6°</td>
+                <td data-label="大約時間">
+                  日落後至 {formatClock(buildDayTimes.blueHourEnd)}（以建置日為例）
+                </td>
+                <td data-label="適合拍什麼">色溫對比、長時間曝光、收尾氛圍</td>
+              </tr>
+              <tr>
+                <th scope="row" data-label="階段">暮光結束</th>
+                <td data-label="太陽高度">低於 −6°</td>
+                <td data-label="大約時間">藍調時刻之後約 20–30 分鐘</td>
+                <td data-label="適合拍什麼">建議收拾器材、確認返程照明</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          表中的「黃金時刻」欄位即為上表第二階段起點。若要完整拍到人像與剪影兩種光線，建議直接以「日落前 60
+          分鐘」作為抵達時間。
+        </p>
+
+        <h2 id="plan">依日落時間安排行程</h2>
+        <p>把日落時間往前回推，就能排出不需要趕的行程：</p>
+        <ul>
+          <li>
+            <strong>只想看夕陽</strong>：日落前 45–60 分鐘抵達，日落後 30 分鐘內離開。以冬季
+            {formatClock(monthlyRows[11].sunset)} 為例，約 16:30 出發、17:00 前到場。
+          </li>
+          <li>
+            <strong>想拍照</strong>：日落前 70–90 分鐘到場，先確認方位角與站位，再等光線。
+          </li>
+          <li>
+            <strong>親子同行</strong>：抓日落前 90 分鐘到場，讓孩子在光線還充足時玩沙，日落後立即收拾。
+          </li>
+          <li>
+            <strong>需要大眾運輸</strong>：先查日落後的第一班回程，再決定抵達時間。班次與站位可能調整，請看
+            <a href="/transport-parking/">交通與停車指南</a>。
+          </li>
+        </ul>
+        <p>
+          冬季日落可早到 {formatClock(earliestSunset.value)}，天黑得比多數人預期快；夜間照明有限，離開時的動線安排比拍攝更重要，細節見
+          <a href="/safety/">海邊安全提醒</a>。
+        </p>
+
+        <h2 id="method">計算方式與誤差</h2>
+        <p>
+          本頁不使用外部 API，而是在建置時以 NOAA Solar Calculator 的標準公式鏈計算，輸入參數如下：
+        </p>
+        <ul>
+          <li>
+            <strong>座標</strong>：{SUN_SITE.latitude}, {SUN_SITE.longitude}（觀夕平台，Plus Code {site.plusCode}）
+          </li>
+          <li><strong>時區</strong>：固定 UTC+8，臺灣自 1980 年起不實施日光節約時間</li>
+          <li>
+            <strong>日出日落定義</strong>：太陽中心位於地平線下 50 角分（大氣折射 34′ + 太陽視半徑 16′）
+          </li>
+          <li><strong>計算時刻</strong>：以當地正午求當日太陽赤緯與時差方程式</li>
+        </ul>
+        <p>
+          與中央氣象署公告值相比，誤差通常在 1 分鐘以內。需要留意的是，表中數值代表<strong>平坦地平線</strong>的理論時刻；實際可見的日落會因為以下原因略為提前：
+        </p>
+        <ul>
+          <li>海面雲層或遠方雲帶遮住低空太陽</li>
+          <li>地平線上的堤防、消波塊與建築物遮蔽</li>
+          <li>大氣折射在貼近地平線時的非線性變化</li>
+        </ul>
+        <p>
+          因此建議把表中時間視為「太陽幾點落到地平線」，實際「看到夕陽」通常會再早 1–5 分鐘。逐日數值於每次網站建置時重新計算；相關資料來源與授權說明整理在
+          <a href="/sources/">資料來源與圖片授權</a>。
+        </p>
+
+        <h2 id="faq">常見問題</h2>
+        {faqs.map((item) => (
+          <div class="sun-faq">
+            <h3>{item.question}</h3>
+            <p>{item.answer}</p>
+          </div>
+        ))}
+
+        <p>
+          其他實用問題（門票、廁所、寵物、無障礙）整理在<a href="/faq/">實用 FAQ</a>。
+        </p>
+      </div>
+
+      <SafetyAlert condensed />
+
+      <section class="mt-10 rounded-[1.75rem] bg-[#173b3f] p-6 text-white sm:p-8">
+        <h2 class="text-2xl font-semibold">把下一步交給地圖</h2>
+        <p class="mt-3 max-w-xl text-sm leading-7 text-white/65">
+          確認今天的日落時間後，直接開啟目的地或選擇交通方式。公車與路況可能變動，出發前請再確認即時資訊。
+        </p>
+        <div class="mt-6">
+          <MapActions compact />
+        </div>
+      </section>
+
+      <section class="mt-12 border-t border-[#173b3f]/12 pt-10">
+        <h2 class="text-2xl font-semibold text-[#173b3f]">接著安排旅程</h2>
+        <div class="mt-6 grid gap-4 sm:grid-cols-2">
+          {
+            relatedLinks.map((guide) => (
+              <a class="related-card" href={guide.href}>
+                <span>
+                  <strong>{guide.label}</strong>
+                  <small>{guide.description}</small>
+                </span>
+                <Icon name="arrow" class="size-5 shrink-0" />
+              </a>
+            ))
+          }
+        </div>
+      </section>
+    </article>
+
+    <aside class="hidden lg:block">
+      <div class="sticky top-[96px] rounded-2xl border border-[#173b3f]/10 bg-white/70 p-5">
+        <p class="text-xs font-bold tracking-[.14em] text-[#2e6f73]">本頁內容</p>
+        <nav class="mt-4 flex flex-col" aria-label="文章目錄">
+          {toc.map((item) => <a class="toc-link" href={`#${item.id}`}>{item.text}</a>)}
+        </nav>
+        <p class="mt-4 border-t border-[#173b3f]/10 pt-4 text-xs leading-6 text-[#173b3f]/55">
+          日落 {formatClock(earliestSunset.value)}–{formatClock(latestSunset.value)}
+          <br />
+          {buildYear} 年全年區間
+        </p>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const card = document.querySelector('[data-sun-now]');
+    if (card) {
+      const todayKey = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Taipei' }).format(
+        new Date()
+      );
+      const row = document.querySelector<HTMLElement>(
+        `[data-sun-row][data-date="${todayKey}"]`
+      );
+      const setText = (selector: string, value?: string) => {
+        const target = card.querySelector(selector);
+        if (target && value) target.textContent = value;
+      };
+
+      if (row) {
+        row.classList.add('is-today');
+        setText('[data-sun-kicker]', '今天');
+        setText('[data-sun-date]', row.dataset.dateLabel);
+        setText('[data-sun-sunset]', row.dataset.sunset);
+        setText('[data-sun-sunrise]', row.dataset.sunrise);
+        setText('[data-sun-golden]', row.dataset.golden);
+        setText('[data-sun-azimuth]', row.dataset.azimuthLabel);
+        setText('[data-sun-arrive]', row.dataset.arrive);
+      } else {
+        setText('[data-sun-kicker]', '本頁資料已超出表格範圍');
+        const note = card.querySelector('[data-sun-note]');
+        if (note instanceof HTMLElement) note.hidden = false;
+      }
+    }
+  </script>
+
+  <style>
+    .sun-now {
+      display: grid;
+      gap: 1.25rem;
+      margin: 1.75rem 0;
+      padding: 1.5rem;
+      border: 1px solid rgb(46 111 115 / 18%);
+      border-radius: 1.5rem;
+      background: linear-gradient(135deg, rgb(23 59 63 / 96%), rgb(35 74 92 / 92%));
+      color: #fff;
+    }
+
+    .sun-now-kicker {
+      margin: 0;
+      color: #f5ab78;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .sun-now-date {
+      margin: 0.35rem 0 0;
+      color: rgb(255 255 255 / 62%);
+      font-size: 0.86rem;
+    }
+
+    .sun-now-value {
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+      margin: 0.5rem 0 0;
+      font-size: clamp(2.6rem, 9vw, 3.6rem);
+      font-weight: 600;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .sun-now-value small {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: rgb(255 255 255 / 55%);
+    }
+
+    .sun-now-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.9rem 1.25rem;
+      margin: 0;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgb(255 255 255 / 12%);
+    }
+
+    .sun-now-grid dt {
+      margin: 0;
+      color: rgb(255 255 255 / 52%);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+    }
+
+    .sun-now-grid dd {
+      margin: 0.3rem 0 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .sun-now-note {
+      grid-column: 1 / -1;
+      margin: 0;
+      color: rgb(255 255 255 / 72%);
+      font-size: 0.8rem;
+      line-height: 1.8;
+    }
+
+    .sun-now-note a {
+      color: #f5ab78;
+    }
+
+    .sun-block {
+      margin: 2.5rem 0;
+    }
+
+    .sun-block-head h3 {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem;
+      margin: 0 0 0.4rem;
+      font-size: 1.3rem;
+    }
+
+    .sun-block-head p {
+      margin: 0 0 1rem;
+      color: rgb(23 59 63 / 58%);
+      font-size: 0.82rem;
+    }
+
+    .sun-chip {
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: rgb(233 138 74 / 18%);
+      color: #b25f26;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+    }
+
+    .sun-table-wrap {
+      overflow-x: auto;
+      border: 1px solid rgb(23 59 63 / 10%);
+      border-radius: 1rem;
+      background: #fff;
+    }
+
+    .sun-table {
+      width: 100%;
+      min-width: 34rem;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .sun-table caption {
+      padding: 0.9rem 1rem 0;
+      color: rgb(23 59 63 / 52%);
+      font-size: 0.74rem;
+      text-align: left;
+    }
+
+    .sun-table th,
+    .sun-table td {
+      padding: 0.62rem 0.9rem;
+      border-bottom: 1px solid rgb(23 59 63 / 8%);
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .sun-table thead th {
+      position: sticky;
+      top: 0;
+      background: rgb(46 111 115 / 9%);
+      color: #173b3f;
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .sun-table tbody th {
+      color: #173b3f;
+      font-weight: 700;
+    }
+
+    .sun-table tbody tr:last-child th,
+    .sun-table tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .sun-table tbody tr.is-today,
+    .sun-table tbody tr.is-build-month {
+      background: rgb(233 138 74 / 12%);
+    }
+
+    .sun-table tbody tr.is-today th,
+    .sun-table tbody tr.is-today td {
+      color: #173b3f;
+      font-weight: 800;
+    }
+
+    .sun-weekday {
+      color: rgb(23 59 63 / 48%);
+      font-size: 0.74rem;
+      font-weight: 600;
+    }
+
+    .sun-faq {
+      margin: 1.75rem 0;
+      padding: 1.1rem 1.25rem;
+      border: 1px solid rgb(23 59 63 / 10%);
+      border-radius: 1rem;
+      background: rgb(255 255 255 / 70%);
+    }
+
+    .sun-faq h3 {
+      margin: 0 0 0.5rem;
+      font-size: 1rem;
+    }
+
+    .sun-faq p {
+      margin: 0;
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 719px) {
+      .sun-table {
+        min-width: 0;
+      }
+
+      .sun-table caption,
+      .sun-table thead {
+        display: none;
+      }
+
+      .sun-table tbody,
+      .sun-table tr,
+      .sun-table th,
+      .sun-table td {
+        display: block;
+        width: 100%;
+      }
+
+      .sun-table tr {
+        padding: 0.85rem 1rem;
+        border-bottom: 1px solid rgb(23 59 63 / 10%);
+      }
+
+      .sun-table tbody th[data-label] {
+        display: flex;
+        align-items: baseline;
+        gap: 0.3rem;
+        padding: 0 0 0.5rem;
+        border: 0;
+        font-size: 0.95rem;
+      }
+
+      .sun-table td {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.3rem 0;
+        border: 0;
+        white-space: normal;
+      }
+
+      .sun-table td::before {
+        content: attr(data-label);
+        color: rgb(23 59 63 / 52%);
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
+    }
+  </style>
+</BaseLayout>

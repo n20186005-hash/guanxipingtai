@@ -46,6 +46,14 @@ import { allGuides, site } from '../data/site';
         <a class="footer-link" href="/sources/">資料來源與圖片授權</a>
         <a
           class="footer-link"
+          href={site.maps.share}
+          target="_blank"
+          rel="noreferrer"
+        >
+          旅客評價（{site.reviews.sourceLabel}）
+        </a>
+        <a
+          class="footer-link"
           href="https://www.cwa.gov.tw/"
           target="_blank"
           rel="noreferrer"
@@ -60,15 +68,40 @@ import { allGuides, site } from '../data/site';
         >
           大台南公車
         </a>
+        <a
+          class="footer-link"
+          href={site.tourism.tainan}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {site.tourism.tainanLabel}（臺南市政府）
+        </a>
+        <a
+          class="footer-link"
+          href={site.tourism.taiwan}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {site.tourism.taiwanLabel}（交通部）
+        </a>
         <a class="footer-link" href="/safety/">海邊安全提醒</a>
       </div>
     </div>
   </div>
 
   <div class="border-t border-white/10">
-    <div class="shell flex flex-col gap-2 py-6 text-xs text-white/45 sm:flex-row sm:items-center sm:justify-between">
-      <p>© {new Date().getFullYear()} 觀夕平台旅遊指南</p>
-      <p>海況與現場告示優先，資訊異動請於出發前再次確認。</p>
+    <div class="shell flex flex-col gap-3 py-6 text-xs text-white/45">
+      <p>
+        旅客評價：評分 {site.reviews.ratingLabel}／5、{site.reviews.countLabel} 則，同步自 {site.reviews.source}，同步時間 {site.reviews.syncedAt}；版權歸原作者與 Google 地圖所有。
+        <a class="underline decoration-white/25 underline-offset-4" href={site.maps.share} target="_blank" rel="noreferrer">
+          在 Google 地圖查看全部評價
+        </a>
+      </p>
+      <p>{site.rights.photos}</p>
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <p>© {new Date().getFullYear()} 觀夕平台旅遊指南</p>
+        <p>海況與現場告示優先，資訊異動請於出發前再次確認。</p>
+      </div>
     </div>
   </div>
 </footer>

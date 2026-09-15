@@ -5,14 +5,15 @@ import Icon from '../components/Icon.astro';
 import MapActions from '../components/MapActions.astro';
 import SafetyAlert from '../components/SafetyAlert.astro';
 import StatusNotice from '../components/StatusNotice.astro';
-import { allGuides, faqItems, site } from '../data/site';
+import { allGuides, site } from '../data/site';
 
 interface Props {
   entry: CollectionEntry<'guides'>;
   headings: { depth: number; slug: string; text: string }[];
+  faq?: { question: string; answer: string }[];
 }
 
-const { entry, headings } = Astro.props;
+const { entry, headings, faq = [] } = Astro.props;
 const data = entry.data;
 const slug = entry.id.replace(/\.mdx?$/, '');
 const relatedGuides = data.related
@@ -55,11 +56,11 @@ const breadcrumbSchema = {
 };
 
 const schemas: object[] = [articleSchema, breadcrumbSchema];
-if (slug === 'faq') {
+if (faq.length > 0) {
   schemas.push({
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: faqItems.map((item) => ({
+    mainEntity: faq.map((item) => ({
       '@type': 'Question',
       name: item.question,
       acceptedAnswer: {
@@ -109,6 +110,40 @@ if (slug === 'faq') {
         <slot />
       </div>
       {slug !== 'safety' && <SafetyAlert condensed />}
+
+      <section class="mt-10 rounded-2xl border border-[#173b3f]/10 bg-white/60 p-6 sm:p-7">
+        <p class="text-xs font-bold tracking-[.14em] text-[#2e6f73]">旅客評價 · 同步時間 {site.reviews.syncedAt}</p>
+        <div class="mt-4 flex flex-wrap items-end gap-x-6 gap-y-2">
+          <p class="text-3xl font-semibold leading-none tracking-[-.04em] text-[#173b3f]">
+            {site.reviews.ratingLabel}
+            <span class="text-base font-semibold text-[#173b3f]/55">／5</span>
+          </p>
+          <p class="text-sm text-[#173b3f]/65">
+            {site.reviews.countLabel} 則評價 · {site.placeType} · {site.address}
+          </p>
+        </div>
+        <p class="mt-4 text-xs leading-7 text-[#173b3f]/58">{site.reviews.note}</p>
+        <div class="mt-5 flex flex-col gap-3">
+          <a
+            class="inline-flex w-fit items-center gap-2 rounded-full bg-[#e98a4a] px-5 py-2.5 text-sm font-bold text-[#172a3a]"
+            href={site.maps.share}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Icon name="map" class="size-4" />
+            {site.reviews.cta}
+          </a>
+          <a
+            class="text-xs leading-7 text-[#173b3f]/62 underline decoration-[#2e6f73]/25 underline-offset-4"
+            href={site.maps.share}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {site.reviews.inlineNote}
+          </a>
+        </div>
+        <p class="mt-2 text-xs leading-7 text-[#173b3f]/45">{site.rights.photos}</p>
+      </section>
       {data.showMapActions && (
         <section class="mt-10 rounded-[1.75rem] bg-[#173b3f] p-6 text-white sm:p-8">
           <h2 class="text-2xl font-semibold">把下一步交給地圖</h2>

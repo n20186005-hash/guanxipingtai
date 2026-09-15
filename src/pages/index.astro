@@ -3,15 +3,19 @@ import { Image, Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import MapActions from '../components/MapActions.astro';
+import ReviewRating from '../components/ReviewRating.astro';
 import SafetyAlert from '../components/SafetyAlert.astro';
 import StatusNotice from '../components/StatusNotice.astro';
 import WeatherCard from '../components/WeatherCard.astro';
 import { faqItems, site } from '../data/site';
-import heroImage from '../assets/images/hero-anping-sunset.jpg';
-import coastImage from '../assets/images/sunset-platform-coast.jpg';
-import oldStreetImage from '../assets/images/anping-old-street.jpg';
-import treeHouseImage from '../assets/images/anping-tree-house.jpg';
-import foodImage from '../assets/images/anping-market-food.jpg';
+import heroImage from '../assets/images/guanxipingtai-hero-sunset-1.jpg';
+import coastImage from '../assets/images/guanxipingtai-coast-platform-1.jpg';
+import oldStreetImage from '../assets/images/anping-old-street-food-1.jpg';
+import treeHouseImage from '../assets/images/anping-tree-house-banyan-1.jpg';
+import foodImage from '../assets/images/anping-market-snack-1.jpg';
+
+const address = site.addressParts;
+const entityPath = [site.officialName, address.locality, address.region, address.country];
 
 const structuredData = [
   {
@@ -26,27 +30,29 @@ const structuredData = [
   {
     '@context': 'https://schema.org',
     '@type': 'TouristAttraction',
-    name: '觀夕平台',
-    alternateName: '觀夕平臺',
-    description:
-      '位於臺南安平海岸，適合散步、看海、拍攝剪影與欣賞臺灣海峽夕陽的戶外景點。',
+    '@id': `${site.url}/#attraction`,
+    name: site.officialName,
+    alternateName: [site.name, `${address.locality} ${site.officialName}`, `${address.region} ${site.officialName}`],
+    description: `${site.officialName}（${site.name}）位於${address.country}${address.region}${address.locality}，適合散步、看海、拍攝剪影與欣賞臺灣海峽夕陽的戶外觀景台。`,
     url: site.url,
-    image: `${site.url}/og-guanxipingtai.jpg`,
+    image: [`${site.url}/guanxipingtai-social-cover-1.jpg`],
+    isAccessibleForFree: true,
     address: {
       '@type': 'PostalAddress',
-      streetAddress: '漁濱路',
-      postalCode: '708',
-      addressLocality: '安平區',
-      addressRegion: '臺南市',
-      addressCountry: 'TW'
+      streetAddress: address.street,
+      postalCode: address.postalCode,
+      addressLocality: address.locality,
+      addressRegion: address.region,
+      addressCountry: address.countryCode
     },
     geo: {
       '@type': 'GeoCoordinates',
       latitude: site.coordinates.latitude,
       longitude: site.coordinates.longitude
     },
+    hasMap: site.maps.share,
     touristType: ['親子旅客', '情侶', '攝影旅客', '自由行旅客'],
-    sameAs: [site.maps.place]
+    sameAs: [site.maps.share, site.maps.place, site.tourism.tainan]
   },
   {
     '@context': 'https://schema.org',
@@ -63,7 +69,7 @@ const structuredData = [
   {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: faqItems.slice(0, 6).map((item) => ({
+    mainEntity: faqItems.slice(0, 8).map((item) => ({
       '@type': 'Question',
       name: item.question,
       acceptedAnswer: {
@@ -129,6 +135,58 @@ const routes = [
     steps: ['熟悉環境', '玩沙取景', '日落', '藍調時刻']
   }
 ];
+
+const deepDives = [
+  {
+    href: '/best-time/',
+    eyebrow: 'SEASON GUIDE',
+    title: '四季遊覽策略表',
+    text: '把氣象、海象與生態放在同一張表對照：哪幾個月光線與體感最平衡，什麼時候海面最不平靜。',
+    points: ['梅雨、颱風與東北季風的季節位置', '海溫與體感差異', '候鳥與潮間帶觀察重點'],
+    icon: 'sun' as const
+  },
+  {
+    href: '/itinerary/',
+    eyebrow: 'BY TRAVELLER',
+    title: '按人群定制的三條路線',
+    text: '親子家庭、攝影自然、低體力與無障礙，三種節奏有不同的停留方式與注意事項。',
+    points: ['親子：移動半徑要小、洗手間先安排', '攝影：日落前 90 分鐘進場到藍調', '無障礙：車輛直達、平台近端停留'],
+    icon: 'walk' as const
+  },
+  {
+    href: '/facilities/',
+    eyebrow: 'VISITOR SERVICES',
+    title: '訪客服務與周邊設施',
+    text: '洗手間、停車、餐飲、住宿、採買、加油與充電的服務類型與查詢方式，只談類型不推薦店家。',
+    points: ['洗手間與沖洗設施', '停車與回程動線', '飲水、垃圾與雨天備案'],
+    icon: 'car' as const
+  },
+  {
+    href: '/coast-science/',
+    eyebrow: 'COASTAL SCIENCE',
+    title: '海岸科普與訪客責任',
+    text: '潮汐、離岸流、季風長浪、沙岸地形與海岸生態，以及無痕海岸的八個原則。',
+    points: ['潮汐如何改變安全邊界', '離岸流的辨識與應對', '不踩踏沙丘與防風林'],
+    icon: 'wave' as const
+  }
+];
+
+const tripLengths = [
+  {
+    label: '半日',
+    duration: '約 4–5 小時',
+    summary: '歷史景點擇一，黃昏到海岸收尾。',
+    detail: ['抵達安平 → 古堡或樹屋擇一 → 老街用餐', '往海岸移動並找車位', '日落前 1 小時抵達平台'],
+    bestFor: '第一次來、行程較緊'
+  },
+  {
+    label: '全日',
+    duration: '約 8–9 小時',
+    summary: '上午台江或港區，最曬的時段留在室內。',
+    detail: ['上午台江國家公園或港灣地景', '中午室內午餐與休息', '午後老街古蹟 → 黃昏海岸 → 晚餐'],
+    bestFor: '想完整走完安平'
+  }
+];
 ---
 
 <BaseLayout structuredData={structuredData}>
@@ -138,9 +196,10 @@ const routes = [
       formats={['avif', 'webp']}
       widths={[640, 960, 1280, 1600, 1920]}
       sizes="100vw"
-      alt="安平港北堤與臺灣海峽黃昏雲層"
+      alt="觀夕平台（觀夕平臺）主視覺：臺南安平港北堤與臺灣海峽黃昏雲層"
       class="home-hero-picture"
       loading="eager"
+      decoding="async"
       fetchpriority="high"
     />
     <div class="home-hero-overlay"></div>
@@ -150,10 +209,10 @@ const routes = [
       <div class="max-w-4xl">
         <h1 class="hero-title">
           <span>觀夕平台</span>
-          <small>安平一天的最後一站</small>
+          <small>觀夕平臺・臺南安平｜安平一天的最後一站</small>
         </h1>
         <p class="mt-6 max-w-2xl text-base leading-8 text-white/76 sm:text-lg">
-          在臺南安平的海岸線，散步、看海、等待夕陽落入臺灣海峽。先把交通、停車與回程想好，再把黃昏留給海風。
+          歡迎來到觀夕平臺，也就是大家熟知的安平觀夕平台。在臺南市安平區的海岸線上散步、看海、等待夕陽落入臺灣海峽。先把交通、停車與回程想好，再把黃昏留給海風。
         </p>
         <div class="mt-8 flex flex-wrap gap-3">
           <a
@@ -213,6 +272,20 @@ const routes = [
   <section class="weather-section py-16 sm:py-20">
     <div class="shell">
       <WeatherCard />
+      <a class="sun-schedule-link" href="/sunset-time/">
+        <span class="sun-schedule-icon"><Icon name="sun" class="size-5" /></span>
+        <span class="sun-schedule-body">
+          <strong>觀夕平台日落時間表</strong>
+          <small>逐日列出日出、日落、日落方位與黃金時刻，含全年總覽與建議抵達時間</small>
+        </span>
+        <Icon name="arrow" class="size-5 shrink-0" />
+      </a>
+    </div>
+  </section>
+
+  <section class="pb-4 sm:pb-6">
+    <div class="shell">
+      <ReviewRating />
     </div>
   </section>
 
@@ -253,10 +326,12 @@ const routes = [
       <div class="coast-photo-wrap">
         <Image
           src={coastImage}
-          alt="觀夕平台海岸、沙灘與安平燈塔"
+          alt="觀夕平台（觀夕平臺）海岸、沙灘與安平燈塔實景"
           widths={[640, 960, 1280]}
           sizes="(min-width: 1024px) 52vw, 100vw"
           loading="lazy"
+          decoding="async"
+          quality={72}
           class="size-full object-cover"
         />
         <div class="coast-stamp">
@@ -385,10 +460,12 @@ const routes = [
         <a href="/nearby/#安平古堡與安平老街" class="nearby-card nearby-card-wide group">
           <Image
             src={oldStreetImage}
-            alt="安平老街古堡街的小吃店與街道"
+            alt="觀夕平台附近景點：安平古堡與安平老街古堡街的小吃店與街道"
             widths={[640, 960, 1280]}
             sizes="(min-width: 768px) 66vw, 100vw"
             loading="lazy"
+            decoding="async"
+            quality={72}
             class="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
           <span class="nearby-shade"></span>
@@ -403,10 +480,12 @@ const routes = [
         <a href="/nearby/#安平樹屋與德記洋行" class="nearby-card nearby-card-tall group">
           <Image
             src={treeHouseImage}
-            alt="安平樹屋內垂落的榕樹氣根與舊倉庫"
+            alt="觀夕平台附近景點：安平樹屋內垂落的榕樹氣根與舊倉庫"
             widths={[480, 720, 960]}
             sizes="(min-width: 768px) 34vw, 100vw"
             loading="lazy"
+            decoding="async"
+            quality={72}
             class="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
           <span class="nearby-shade"></span>
@@ -421,10 +500,12 @@ const routes = [
         <a href="/food/" class="nearby-card nearby-card-food group">
           <Image
             src={foodImage}
-            alt="安平老街販售糕餅、蜜餞與傳統零食的攤位"
+            alt="觀夕平台附近美食：安平老街販售糕餅、蜜餞與傳統零食的攤位"
             widths={[480, 720, 960]}
             sizes="(min-width: 768px) 34vw, 100vw"
             loading="lazy"
+            decoding="async"
+            quality={72}
             class="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
           <span class="nearby-shade"></span>
@@ -439,6 +520,160 @@ const routes = [
     </div>
   </section>
 
+  <section class="entity-section py-20 sm:py-28" id="about">
+    <div class="shell">
+      <nav class="geo-breadcrumb" aria-label="地理歸屬層級">
+        {
+          entityPath.map((part, index) => (
+            <>
+              {index > 0 && <span class="geo-sep" aria-hidden="true">→</span>}
+              <span>{part}</span>
+            </>
+          ))
+        }
+      </nav>
+
+      <div class="mt-10 grid gap-10 lg:grid-cols-[1.05fr_.95fr]">
+        <div class="flex flex-col gap-9">
+          <div>
+            <h2 class="entity-heading">關於觀夕平台（About 觀夕平臺）</h2>
+            <p class="entity-text">
+              歡迎來到<strong>觀夕平臺</strong>，這裡就是旅客口中的<strong>安平觀夕平台</strong>。它位於<strong>臺灣</strong><strong>臺南市</strong><strong>安平區</strong>漁濱路的海岸線上，是安平港灣最主要的賞夕據點，也常被安排成安平一日行程的最後一站。
+            </p>
+          </div>
+
+          <div>
+            <h2 class="entity-heading">位置與前往方式：觀夕平台怎麼去（Location &amp; How to Visit）</h2>
+            <p class="entity-text">
+              自駕可直接以 Google 地圖導航，搭乘大眾運輸則建議先確認日落後的回程班次；黃昏熱門時段周邊停車較快滿位，建議提早抵達。
+            </p>
+            <div class="mt-5">
+              <MapActions />
+            </div>
+          </div>
+
+          <div>
+            <h2 class="entity-heading">觀夕平台周邊地標（Landmarks &amp; Attractions Around）</h2>
+            <p class="entity-text">
+              安排觀夕平台行程時，可以順路探索周邊的歷史地標與景點，包括<strong>安平古堡與安平老街</strong>，以及<strong>安平樹屋與德記洋行</strong>；把需要門票與日光的景點排在白天，夕陽留給海岸。
+            </p>
+            <a href="/nearby/" class="text-link mt-4 inline-flex items-center gap-2">
+              查看全部附近景點
+              <Icon name="arrow" class="size-4" />
+            </a>
+          </div>
+
+          <div>
+            <h2 class="entity-heading">觀夕平台的歷史與意義（History &amp; Significance）</h2>
+            <p class="entity-text">
+              觀夕平台座落在安平港北側的海岸堤防旁，平台、防風林與沙灘形成層次分明的港灣地景，也因此成為臺南最熱門的西向賞夕地點之一。想深入了解安平港與海岸地景，可閱讀完整介紹。
+            </p>
+            <a href="/history-highlights/" class="text-link mt-4 inline-flex items-center gap-2">
+              查看歷史與看點
+              <Icon name="arrow" class="size-4" />
+            </a>
+          </div>
+        </div>
+
+        <aside class="entity-card">
+          <h2 class="entity-card-title">觀夕平台重點資訊</h2>
+          <dl class="entity-facts">
+            <div><dt>官方名稱</dt><dd>觀夕平臺</dd></div>
+            <div><dt>常用名稱</dt><dd>觀夕平台</dd></div>
+            <div><dt>景點類型</dt><dd>{site.placeType}</dd></div>
+            <div><dt>地址</dt><dd>{site.address}</dd></div>
+            <div><dt>Plus Code</dt><dd>{site.plusCode}</dd></div>
+            <div><dt>座標</dt><dd>{site.coordinates.latitude}, {site.coordinates.longitude}</dd></div>
+          </dl>
+          <p class="entity-tourism">
+            如需最新的觀光活動與區域旅遊資訊，可前往
+            <a href={site.tourism.tainan} target="_blank" rel="noopener noreferrer">{site.tourism.tainanLabel}（臺南市政府）</a>
+            或
+            <a href={site.tourism.taiwan} target="_blank" rel="noopener noreferrer">{site.tourism.taiwanLabel}</a>
+            的官方入口查詢。
+          </p>
+          <a
+            class="entity-map-link"
+            href={site.maps.share}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            在 Google 地圖開啟觀夕平台
+            <Icon name="arrow" class="size-4" />
+          </a>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="deep-section py-20 sm:py-28" id="deep-dive">
+    <div class="shell">
+      <div class="grid items-end gap-6 md:grid-cols-[1fr_auto]">
+        <div>
+          <p class="deep-eyebrow">科普與行程規劃</p>
+          <h2 class="section-title">出發前值得先讀的四件事</h2>
+        </div>
+        <p class="section-lead md:max-w-sm">
+          這裡不是打卡清單。先理解季節、人群、設施與海岸環境，行程自然會安排得比較從容。
+        </p>
+      </div>
+
+      <div class="mt-12 grid gap-4 md:grid-cols-2">
+        {
+          deepDives.map((item) => (
+            <a href={item.href} class="deep-card group">
+              <div class="flex items-start justify-between gap-4">
+                <span class="deep-icon"><Icon name={item.icon} class="size-5" /></span>
+                <span class="deep-eyebrow">{item.eyebrow}</span>
+              </div>
+              <h3>{item.title}</h3>
+              <p class="deep-text">{item.text}</p>
+              <ul class="deep-points">
+                {item.points.map((point) => (
+                  <li>{point}</li>
+                ))}
+              </ul>
+              <span class="deep-link">
+                閱讀全文
+                <Icon name="arrow" class="size-4 transition-transform group-hover:translate-x-1" />
+              </span>
+            </a>
+          ))
+        }
+      </div>
+
+      <div class="mt-6 grid gap-4 md:grid-cols-2">
+        {
+          tripLengths.map((trip) => (
+            <div class="trip-card">
+              <div class="flex items-center justify-between gap-4">
+                <h3>
+                  {trip.label}
+                  <span>{trip.duration}</span>
+                </h3>
+              </div>
+              <p class="trip-summary">{trip.summary}</p>
+              <ol class="trip-steps">
+                {trip.detail.map((step, index) => (
+                  <li>
+                    <span>{index + 1}</span>
+                    {step}
+                  </li>
+                ))}
+              </ol>
+              <p class="trip-best">適合：{trip.bestFor}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <a href="/itinerary/" class="text-link mt-7 inline-flex items-center gap-2">
+        查看半日、全日與三條人群路線
+        <Icon name="arrow" class="size-4" />
+      </a>
+    </div>
+  </section>
+
   <section class="py-20 sm:py-28">
     <div class="shell grid gap-12 lg:grid-cols-[.8fr_1.2fr]">
       <div>
@@ -447,13 +682,13 @@ const routes = [
           設施、交通與開放狀態可能調整；以下先提供旅程判斷，當天仍要再次確認。
         </p>
         <a href="/faq/" class="text-link mt-7 inline-flex items-center gap-2">
-          查看完整 20 題 FAQ
+          查看完整常見問題
           <Icon name="arrow" class="size-4" />
         </a>
       </div>
       <div class="faq-list">
         {
-          faqItems.slice(0, 6).map((item, index) => (
+          faqItems.slice(0, 8).map((item, index) => (
             <details class="faq-item" open={index === 0}>
               <summary>
                 <span>{item.question}</span>
@@ -629,6 +864,55 @@ const routes = [
     color: rgb(23 59 63 / 62%);
     font-size: .85rem;
     line-height: 1.8;
+  }
+
+  .sun-schedule-link {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-top: 0.85rem;
+    padding: 1.05rem 1.25rem;
+    border: 1px solid rgb(23 59 63 / 11%);
+    border-radius: 1.15rem;
+    background: rgb(255 255 255 / 66%);
+    color: #173b3f;
+    transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+  }
+
+  .sun-schedule-link:hover {
+    border-color: rgb(46 111 115 / 32%);
+    background: white;
+    transform: translateY(-2px);
+  }
+
+  .sun-schedule-icon {
+    display: grid;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex: none;
+    place-items: center;
+    border-radius: 999px;
+    background: rgb(233 138 74 / 14%);
+    color: #d66f2a;
+  }
+
+  .sun-schedule-body {
+    display: block;
+    min-width: 0;
+  }
+
+  .sun-schedule-body strong {
+    display: block;
+    font-size: 0.94rem;
+    font-weight: 750;
+  }
+
+  .sun-schedule-body small {
+    display: block;
+    margin-top: 0.25rem;
+    color: rgb(23 59 63 / 60%);
+    font-size: 0.76rem;
+    line-height: 1.6;
   }
 
   .coast-photo-wrap {
@@ -884,6 +1168,286 @@ const routes = [
 
   .faq-item[open] .faq-plus {
     transform: rotate(45deg);
+  }
+
+  .entity-section {
+    border-block: 1px solid rgb(23 59 63 / 10%);
+    background:
+      radial-gradient(circle at 88% 12%, rgb(233 138 74 / 10%), transparent 26rem),
+      rgb(255 255 255 / 42%);
+  }
+
+  .geo-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem;
+    color: rgb(23 59 63 / 55%);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .geo-sep {
+    color: rgb(233 138 74 / 80%);
+  }
+
+  .entity-heading {
+    color: #173b3f;
+    font-size: clamp(1.35rem, 3vw, 1.8rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.3;
+  }
+
+  .entity-text {
+    max-width: 620px;
+    margin-top: 0.85rem;
+    color: rgb(23 59 63 / 70%);
+    font-size: 0.92rem;
+    line-height: 1.95;
+  }
+
+  .entity-text strong {
+    color: #173b3f;
+    font-weight: 750;
+  }
+
+  .entity-card {
+    align-self: start;
+    padding: 1.6rem;
+    border: 1px solid rgb(23 59 63 / 12%);
+    border-radius: 1.5rem;
+    background: rgb(255 255 255 / 72%);
+    box-shadow: 0 18px 44px rgb(23 59 63 / 9%);
+  }
+
+  .entity-card-title {
+    color: #173b3f;
+    font-size: 1.1rem;
+    font-weight: 720;
+  }
+
+  .entity-facts {
+    display: grid;
+    gap: 0.55rem;
+    margin-top: 1.1rem;
+  }
+
+  .entity-facts div {
+    padding: 0.7rem 0.85rem;
+    border-radius: 0.85rem;
+    background: #f6f0e4;
+  }
+
+  .entity-facts dt {
+    color: rgb(23 59 63 / 52%);
+    font-size: 0.66rem;
+  }
+
+  .entity-facts dd {
+    margin: 0.2rem 0 0;
+    color: #173b3f;
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+
+  .entity-tourism {
+    margin-top: 1.15rem;
+    color: rgb(23 59 63 / 62%);
+    font-size: 0.76rem;
+    line-height: 1.85;
+  }
+
+  .entity-tourism a {
+    color: #2e6f73;
+    font-weight: 800;
+    text-decoration: underline;
+    text-decoration-color: rgb(46 111 115 / 25%);
+    text-underline-offset: 0.22em;
+  }
+
+  .entity-tourism a:hover {
+    text-decoration-color: #2e6f73;
+  }
+
+  .entity-map-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 0.9rem;
+    color: #2e6f73;
+    font-size: 0.82rem;
+    font-weight: 800;
+  }
+
+  .entity-map-link:hover {
+    color: #173b3f;
+  }
+
+  .deep-section {
+    border-block: 1px solid rgb(23 59 63 / 10%);
+    background:
+      radial-gradient(circle at 8% 92%, rgb(46 111 115 / 9%), transparent 30rem),
+      rgb(255 255 255 / 38%);
+  }
+
+  .deep-eyebrow {
+    color: rgb(46 111 115 / 78%);
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+  }
+
+  .deep-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.6rem;
+    border: 1px solid rgb(23 59 63 / 11%);
+    border-radius: 1.5rem;
+    background: rgb(255 255 255 / 72%);
+    color: #173b3f;
+    transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+  }
+
+  .deep-card:hover {
+    border-color: rgb(46 111 115 / 30%);
+    background: white;
+    transform: translateY(-4px);
+  }
+
+  .deep-icon {
+    display: grid;
+    width: 2.7rem;
+    height: 2.7rem;
+    place-items: center;
+    border-radius: 999px;
+    background: rgb(46 111 115 / 10%);
+    color: #2e6f73;
+  }
+
+  .deep-card h3 {
+    margin-top: 1.35rem;
+    font-size: 1.2rem;
+    font-weight: 720;
+    letter-spacing: -0.02em;
+  }
+
+  .deep-text {
+    margin-top: 0.7rem;
+    color: rgb(23 59 63 / 64%);
+    font-size: 0.85rem;
+    line-height: 1.8;
+  }
+
+  .deep-points {
+    display: grid;
+    gap: 0.45rem;
+    margin: 1.1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .deep-points li {
+    position: relative;
+    padding-left: 1rem;
+    color: rgb(23 59 63 / 58%);
+    font-size: 0.78rem;
+    line-height: 1.7;
+  }
+
+  .deep-points li::before {
+    position: absolute;
+    top: 0.62rem;
+    left: 0;
+    width: 0.32rem;
+    height: 0.32rem;
+    border-radius: 50%;
+    background: rgb(233 138 74 / 85%);
+    content: "";
+  }
+
+  .deep-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: auto;
+    padding-top: 1.3rem;
+    color: #2e6f73;
+    font-size: 0.78rem;
+    font-weight: 800;
+  }
+
+  .trip-card {
+    padding: 1.5rem;
+    border: 1px solid rgb(23 59 63 / 12%);
+    border-radius: 1.4rem;
+    background: #f6f0e4;
+  }
+
+  .trip-card h3 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6rem;
+    color: #173b3f;
+    font-size: 1.15rem;
+    font-weight: 750;
+  }
+
+  .trip-card h3 span {
+    color: rgb(23 59 63 / 48%);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+  }
+
+  .trip-summary {
+    margin-top: 0.55rem;
+    color: rgb(23 59 63 / 62%);
+    font-size: 0.82rem;
+    line-height: 1.75;
+  }
+
+  .trip-steps {
+    display: grid;
+    gap: 0.4rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .trip-steps li {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: rgb(23 59 63 / 66%);
+    font-size: 0.78rem;
+    line-height: 1.65;
+  }
+
+  .trip-steps li span {
+    display: grid;
+    width: 1.4rem;
+    height: 1.4rem;
+    flex: none;
+    place-items: center;
+    border-radius: 50%;
+    background: rgb(23 59 63 / 8%);
+    color: rgb(23 59 63 / 62%);
+    font-size: 0.6rem;
+    font-weight: 700;
+  }
+
+  .trip-best {
+    margin-top: 1rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid rgb(23 59 63 / 10%);
+    color: rgb(46 111 115 / 85%);
+    font-size: 0.72rem;
+    font-weight: 700;
   }
 
   @media (max-width: 767px) {

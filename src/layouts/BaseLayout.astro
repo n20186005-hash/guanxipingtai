@@ -9,15 +9,17 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  imageAlt?: string;
   type?: 'website' | 'article';
   noindex?: boolean;
   structuredData?: object | object[];
 }
 
 const {
-  title = '觀夕平台｜安平夕陽、交通停車與周邊行程指南',
+  title = '觀夕平台（觀夕平臺）｜臺南安平夕陽、交通停車與周邊行程指南',
   description = site.description,
-  image = '/og-guanxipingtai.jpg',
+  image = '/guanxipingtai-social-cover-1.jpg',
+  imageAlt = '觀夕平台（觀夕平臺）在臺南安平的海岸與日落景觀',
   type = 'website',
   noindex = false,
   structuredData
@@ -45,7 +47,14 @@ const jsonLd = structuredData
     <link rel="alternate" hreflang="zh-Hant-TW" href={canonical} />
     <link rel="alternate" hreflang="x-default" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" sizes="180x180" />
     <link rel="manifest" href="/site.webmanifest" />
+
+    <meta name="application-name" content={site.fullName} />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content={site.name} />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
 
     <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-HXM22WWPKP"></script>
     <script is:inline>
@@ -64,14 +73,15 @@ const jsonLd = structuredData
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={absoluteImage} />
-    <meta property="og:image:width" content="1920" />
-    <meta property="og:image:height" content="1078" />
-    <meta property="og:image:alt" content="安平港海岸與日落雲層" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={absoluteImage} />
+    <meta name="twitter:image:alt" content={imageAlt} />
 
     {jsonLd && <script is:inline type="application/ld+json" set:html={jsonLd} />}
   </head>
@@ -83,5 +93,12 @@ const jsonLd = structuredData
     </main>
     <Footer />
     <MobileDock />
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
+      }
+    </script>
   </body>
 </html>
