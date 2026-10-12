@@ -7,6 +7,8 @@ import ReviewRating from '../components/ReviewRating.astro';
 import SafetyAlert from '../components/SafetyAlert.astro';
 import StatusNotice from '../components/StatusNotice.astro';
 import WeatherCard from '../components/WeatherCard.astro';
+import SunsetToday from '../components/SunsetToday.astro';
+import VerifiedNotice from '../components/VerifiedNotice.astro';
 import { faqItems, site } from '../data/site';
 import heroImage from '../assets/images/guanxipingtai-hero-sunset-1.jpg';
 import coastImage from '../assets/images/guanxipingtai-coast-platform-1.jpg';
@@ -209,7 +211,7 @@ const tripLengths = [
       <div class="max-w-4xl">
         <h1 class="hero-title">
           <span>觀夕平台</span>
-          <small>觀夕平臺・臺南安平｜安平一天的最後一站</small>
+          <small>觀夕平臺・臺南安平｜台南安平看夕陽、日落時間與交通停車指南</small>
         </h1>
         <p class="mt-6 max-w-2xl text-base leading-8 text-white/76 sm:text-lg">
           歡迎來到觀夕平臺，也就是大家熟知的安平觀夕平台。在臺南市安平區的海岸線上散步、看海、等待夕陽落入臺灣海峽。先把交通、停車與回程想好，再把黃昏留給海風。
@@ -269,17 +271,14 @@ const tripLengths = [
     </div>
   </section>
 
+  <section class="shell py-12 sm:py-16">
+    <VerifiedNotice />
+  </section>
+
   <section class="weather-section py-16 sm:py-20">
     <div class="shell">
       <WeatherCard />
-      <a class="sun-schedule-link" href="/sunset-time/">
-        <span class="sun-schedule-icon"><Icon name="sun" class="size-5" /></span>
-        <span class="sun-schedule-body">
-          <strong>觀夕平台日落時間表</strong>
-          <small>逐日列出日出、日落、日落方位與黃金時刻，含全年總覽與建議抵達時間</small>
-        </span>
-        <Icon name="arrow" class="size-5 shrink-0" />
-      </a>
+      <SunsetToday />
     </div>
   </section>
 

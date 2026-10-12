@@ -1,0 +1,123 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+
+const facts = [
+  { label: '免費入場', value: '戶外公共空間，無須購票' },
+  { label: '開放時間', value: '一般為 24 小時，現場管制優先' },
+  { label: '地址', value: site.address },
+  { label: '資料來源', value: `${site.tourism.tainanLabel}（臺南市政府觀光旅遊局）` }
+];
+---
+
+<section class="verified-notice" aria-label="出發前須知（已核實資料）">
+  <div class="verified-notice-head">
+    <span class="verified-icon"><Icon name="shield" class="size-5" /></span>
+    <div>
+      <h2 class="verified-title">出發前先知道</h2>
+      <p class="verified-sub">以下為已核實的開放與入場資訊，現場臨時管制或施工仍請以現場公告為準。</p>
+    </div>
+  </div>
+
+  <dl class="verified-grid">
+    {
+      facts.map((fact) => (
+        <div class="verified-item">
+          <dt>{fact.label}</dt>
+          <dd>{fact.value}</dd>
+        </div>
+      ))
+    }
+  </dl>
+
+  <a class="verified-source" href={site.tourism.tainan} target="_blank" rel="noreferrer">
+    核對資料來源：{site.tourism.tainanLabel}
+    <Icon name="arrow" class="size-4" />
+  </a>
+</section>
+
+<style>
+  .verified-notice {
+    border-radius: 1.5rem;
+    border: 1px solid rgb(46 111 115 / 22%);
+    background: rgb(46 111 115 / 7%);
+    padding: 1.5rem;
+  }
+
+  .verified-notice-head {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .verified-icon {
+    display: grid;
+    place-items: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    flex-shrink: 0;
+    border-radius: 0.7rem;
+    background: #2e6f73;
+    color: white;
+  }
+
+  .verified-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #173b3f;
+  }
+
+  .verified-sub {
+    margin-top: 0.25rem;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: rgb(23 59 63 / 65%);
+  }
+
+  .verified-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem 1.5rem;
+    margin-top: 1.15rem;
+  }
+
+  .verified-item {
+    border-top: 1px solid rgb(46 111 115 / 16%);
+    padding-top: 0.6rem;
+  }
+
+  .verified-item dt {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #2e6f73;
+  }
+
+  .verified-item dd {
+    margin-top: 0.2rem;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #173b3f;
+  }
+
+  .verified-source {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 1.1rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #2e6f73;
+  }
+
+  .verified-source:hover {
+    gap: 0.55rem;
+  }
+
+  @media (max-width: 560px) {
+    .verified-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,196 @@
+---
+import Icon from './Icon.astro';
+import { SUN_SITE, formatClock, getSunTimes, compassName } from '../lib/sun';
+
+const taipeiNow = new Date(Date.now() + SUN_SITE.utcOffset * 3600 * 1000);
+const buildYear = taipeiNow.getUTCFullYear();
+const buildMonth = taipeiNow.getUTCMonth();
+const buildDay = taipeiNow.getUTCDate();
+const times = getSunTimes(buildYear, buildMonth, buildDay);
+
+const buildDateText = `${buildYear} 年 ${buildMonth + 1} 月 ${buildDay} 日`;
+const sunset = formatClock(times.sunset);
+const arrive = formatClock(times.sunset === null ? null : times.sunset - 60);
+const golden = formatClock(times.goldenHour);
+const sunrise = formatClock(times.sunrise);
+const azimuth =
+  times.sunsetAzimuth === null
+    ? '—'
+    : `${times.sunsetAzimuth.toFixed(1)}° ${compassName(times.sunsetAzimuth)}`;
+---
+
+<section class="sunset-today" aria-labelledby="sunset-today-title">
+  <div class="sunset-today-head">
+    <h2 id="sunset-today-title" class="sunset-today-title">觀夕平台今日預估日落時間</h2>
+    <p class="sunset-today-kicker" data-sunset-kicker>建置日 {buildDateText}</p>
+  </div>
+
+  <div class="sunset-today-main">
+    <p class="sunset-today-value">
+      <span data-sunset-sunset>{sunset}</span>
+      <small>日落</small>
+    </p>
+    <dl class="sunset-today-grid">
+      <div>
+        <dt>建議抵達</dt>
+        <dd data-sunset-arrive>{arrive}</dd>
+      </div>
+      <div>
+        <dt>黃金時刻</dt>
+        <dd data-sunset-golden>{golden}</dd>
+      </div>
+      <div>
+        <dt>日落方位</dt>
+        <dd data-sunset-azimuth>{azimuth}</dd>
+      </div>
+      <div>
+        <dt>日出</dt>
+        <dd data-sunset-sunrise>{sunrise}</dd>
+      </div>
+    </dl>
+  </div>
+
+  <p class="sunset-today-note">
+    依觀夕平台座標（{SUN_SITE.latitude}, {SUN_SITE.longitude}）以 NOAA
+    太陽位置演算法計算，誤差約 1 分鐘；實際可見日落會因雲層與堤防略早。氣象與海象仍以
+    <a href="https://www.cwa.gov.tw/" target="_blank" rel="noreferrer">中央氣象署</a>公告為準。
+  </p>
+
+  <a class="sunset-today-link" href="/sunset-time/">
+    查看逐日日落時間表
+    <Icon name="arrow" class="size-4" />
+  </a>
+</section>
+
+<script>
+  import { SUN_SITE, formatClock, getSunTimes, compassName } from '../lib/sun';
+
+  const taipeiDate = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Taipei' })
+    .format(new Date());
+  const [yy, mm, dd] = taipeiDate.split('-').map(Number);
+  const t = getSunTimes(yy, mm - 1, dd);
+
+  const set = (key: string, value: string) => {
+    const el = document.querySelector(`[data-sunset-${key}]`);
+    if (el) el.textContent = value;
+  };
+
+  set('kicker', `今天（${yy} 年 ${mm} 月 ${dd} 日）`);
+  set('sunset', formatClock(t.sunset));
+  set('arrive', formatClock(t.sunset === null ? null : t.sunset - 60));
+  set('golden', formatClock(t.goldenHour));
+  set('sunrise', formatClock(t.sunrise));
+  set(
+    'azimuth',
+    t.sunsetAzimuth === null
+      ? '—'
+      : `${t.sunsetAzimuth.toFixed(1)}° ${compassName(t.sunsetAzimuth)}`
+  );
+</script>
+
+<style>
+  .sunset-today {
+    margin-top: 1.25rem;
+    border-radius: 1.5rem;
+    border: 1px solid rgb(23 59 63 / 12%);
+    background: linear-gradient(180deg, rgb(233 138 74 / 12%), white 60%);
+    padding: 1.5rem 1.5rem 1.75rem;
+  }
+
+  .sunset-today-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .sunset-today-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #173b3f;
+  }
+
+  .sunset-today-kicker {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: #c96a2e;
+  }
+
+  .sunset-today-main {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1rem 1.75rem;
+    margin-top: 1rem;
+  }
+
+  .sunset-today-value {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    line-height: 1;
+  }
+
+  .sunset-today-value span {
+    font-size: 2.6rem;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    color: #173b3f;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sunset-today-value small {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: rgb(23 59 63 / 60%);
+  }
+
+  .sunset-today-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem 1.5rem;
+    flex: 1;
+    min-width: 220px;
+  }
+
+  .sunset-today-grid dt {
+    font-size: 0.7rem;
+    color: rgb(23 59 63 / 55%);
+  }
+
+  .sunset-today-grid dd {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #173b3f;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sunset-today-note {
+    margin-top: 1.1rem;
+    font-size: 0.76rem;
+    line-height: 1.7;
+    color: rgb(23 59 63 / 62%);
+  }
+
+  .sunset-today-note a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .sunset-today-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #2e6f73;
+  }
+
+  .sunset-today-link:hover {
+    gap: 0.55rem;
+  }
+</style>

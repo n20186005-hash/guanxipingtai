@@ -6,7 +6,7 @@ export const site = {
   domain: 'guanxipingtai.com',
   url: 'https://guanxipingtai.com',
   description:
-    '觀夕平台（觀夕平臺）完整旅遊指南，整理臺南安平看夕陽的最佳時段、交通停車、現場玩法、海邊安全、附近美食、住宿與順遊行程。',
+    '台南安平觀夕平台旅遊指南，整理今日預估日落時間、停車位置、交通方式、免費門票、開放資訊與周邊景點，幫你安排最適合的賞夕行程。',
   placeType: '觀景台',
   address: '708 臺南市安平區漁濱路',
   addressParts: {
@@ -47,12 +47,12 @@ export const site = {
     sourceLabel: 'Google 地圖',
     rating: 4.4,
     ratingLabel: '4.4',
-    count: 12328,
-    countLabel: '12,328',
-    syncedAt: '2026 年 9 月',
-    note: '同步自 Google 地圖使用者評價，同步時間 2026 年 9 月；版權歸原作者與 Google 地圖所有。',
+    count: 12384,
+    countLabel: '12,384',
+    syncedAt: '2026 年 10 月',
+    note: '同步自 Google 地圖使用者評價，同步時間 2026 年 10 月；版權歸原作者與 Google 地圖所有。',
     inlineNote:
-      '評分與評價數同步自 Google 地圖（Google Maps）使用者評價 · 2026 年 9 月 · 點擊查看 Google 地圖全部評價↗',
+      '評分與評價數同步自 Google 地圖（Google Maps）使用者評價 · 2026 年 10 月 · 點擊查看 Google 地圖全部評價↗',
     cta: '在 Google 地圖查看全部評價'
   },
   rights: {
