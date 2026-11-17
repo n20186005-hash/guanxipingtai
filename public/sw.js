@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'guanxipingtai-v2';
+const CACHE_VERSION = 'guanxipingtai-v3';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const ASSET_CACHE = `${CACHE_VERSION}-assets`;
 const PAGE_CACHE = `${CACHE_VERSION}-pages`;
@@ -81,10 +81,13 @@ self.addEventListener('fetch', (event) => {
   if (isImmutableAsset) {
     event.respondWith(
       caches.match(request).then((cached) => {
-        if (cached) return cached;
+        if (cached && cached.ok) return cached;
         return fetch(request).then((response) => {
-          const copy = response.clone();
-          caches.open(ASSET_CACHE).then((cache) => cache.put(request, copy)).catch(() => undefined);
+          // Avoid persisting a transient deployment 404 for immutable hashed CSS/JS.
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(ASSET_CACHE).then((cache) => cache.put(request, copy)).catch(() => undefined);
+          }
           return response;
         });
       })
