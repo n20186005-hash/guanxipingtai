@@ -1,0 +1,62 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { attractionFocus } from '../data/attractionFocus';
+import { allGuides } from '../data/site';
+
+interface Props { entry: CollectionEntry<'guides'>; slug: string }
+const { entry, slug } = Astro.props;
+const data = entry.data;
+const focus = attractionFocus[slug];
+const nearby = data.related
+  .map((relatedSlug) => allGuides.find((guide) => guide.href === `/${relatedSlug}/`))
+  .filter((guide): guide is NonNullable<typeof guide> => Boolean(guide))
+  .slice(0, 3);
+---
+
+{focus && data.placeMapUrl && (
+  <section class="mb-12 rounded-[1.75rem] border border-[#173b3f]/12 bg-[#fffdf7] p-5 shadow-sm sm:p-8" aria-label={`${data.title}行程規劃與基本資料`}>
+    <p class="text-xs font-bold tracking-[.15em] text-[#2e6f73]">先規劃，再出發</p>
+    <h2 class="mt-2 text-2xl font-semibold tracking-tight text-[#173b3f] sm:text-3xl">{data.title.split('：')[0]}遊覽重點</h2>
+    <p class="mt-4 text-sm leading-8 text-[#173b3f]/78">{focus.context}</p>
+
+    <div class="mt-7 grid gap-4 sm:grid-cols-2">
+      <div class="rounded-2xl bg-[#eaf2ed] p-5">
+        <h3 class="font-semibold text-[#173b3f]">推薦看點</h3>
+        <p class="mt-2 text-sm leading-7 text-[#173b3f]/80">{focus.observe}</p>
+      </div>
+      <div class="rounded-2xl bg-[#f8ecdf] p-5">
+        <h3 class="font-semibold text-[#173b3f]">拍照位置與角度</h3>
+        <p class="mt-2 text-sm leading-7 text-[#173b3f]/80">{focus.photo}</p>
+      </div>
+    </div>
+
+    <h3 class="mt-9 text-xl font-semibold text-[#173b3f]">基本資訊速覽</h3>
+    <dl class="mt-4 divide-y divide-[#173b3f]/10 overflow-hidden rounded-xl border border-[#173b3f]/10 bg-white text-sm">
+      <div class="grid gap-1 p-4 sm:grid-cols-[9rem_1fr]"><dt class="font-semibold text-[#173b3f]">所在位置</dt><dd class="leading-7 text-[#173b3f]/80">{data.placeAddress ?? '以專屬 Google 地圖定位為準'}</dd></div>
+      <div class="grid gap-1 p-4 sm:grid-cols-[9rem_1fr]"><dt class="font-semibold text-[#173b3f]">開放與入場</dt><dd class="leading-7 text-[#173b3f]/80">{data.placeHours ?? '依現場公告'}</dd></div>
+      <div class="grid gap-1 p-4 sm:grid-cols-[9rem_1fr]"><dt class="font-semibold text-[#173b3f]">票價</dt><dd class="leading-7 text-[#173b3f]/80">{data.placeAdmission ?? '以現場公告為準'}</dd></div>
+      <div class="grid gap-1 p-4 sm:grid-cols-[9rem_1fr]"><dt class="font-semibold text-[#173b3f]">建議停留</dt><dd class="leading-7 text-[#173b3f]/80">{data.placeDuration ?? '依當日行程彈性安排'}</dd></div>
+      <div class="grid gap-1 p-4 sm:grid-cols-[9rem_1fr]"><dt class="font-semibold text-[#173b3f]">地圖與交通</dt><dd class="leading-7"><a class="font-semibold text-[#2e6f73] underline underline-offset-4" href={data.placeMapUrl} target="_blank" rel="noreferrer">開啟此景點專屬 Google Maps 定位 ↗</a></dd></div>
+    </dl>
+
+    <h3 class="mt-9 text-xl font-semibold text-[#173b3f]">到訪順序與步行安排</h3>
+    <ol class="mt-4 grid gap-3 text-sm leading-7 text-[#173b3f]/80">
+      <li class="flex gap-4 rounded-xl bg-white p-4"><span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#173b3f] font-semibold text-white">1</span><span>出發前確認本景點最新開放、門票及天候狀況，先在地圖上核對可合法抵達的入口，而不只看定位圖釘。</span></li>
+      <li class="flex gap-4 rounded-xl bg-white p-4"><span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#173b3f] font-semibold text-white">2</span><span>{focus.practical} 按建議停留時間安排觀察與拍照，不必為了打卡趕路。</span></li>
+      <li class="flex gap-4 rounded-xl bg-white p-4"><span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#173b3f] font-semibold text-white">3</span><span>若要順遊其他地點，先比較各自 Google 地圖路線及可通行性；周邊景點只是延伸選擇，並不表示彼此可直接步行相連。</span></li>
+    </ol>
+
+    <h3 class="mt-9 text-xl font-semibold text-[#173b3f]">交通與住宿怎麼安排</h3>
+    <p class="mt-3 text-sm leading-8 text-[#173b3f]/80">自駕請依地圖選擇合法道路與停車空間，不在港區出入口、堤岸或消防通道停車。使用公共運輸可先透過<a class="font-semibold text-[#2e6f73] underline underline-offset-4" href="https://2384.tainan.gov.tw/" target="_blank" rel="noreferrer">大臺南公車</a>查詢當日班次，並核對下車後步行距離；騎 YouBike 則須確認站點是否有車及還車位。若要住一晚，安平市區較便於串連古蹟、美食與港濱景點，詳見<a class="font-semibold text-[#2e6f73] underline underline-offset-4" href="/stay/">住宿與行程建議</a>。</p>
+
+    <h3 class="mt-9 text-xl font-semibold text-[#173b3f]">旅客評價與出發前 FAQ</h3>
+    <p class="mt-3 text-sm leading-8 text-[#173b3f]/80">不同地圖地標的評分與評論數會變動，本站不為未逐一核對的場所填入推測分數。可直接<a class="font-semibold text-[#2e6f73] underline underline-offset-4" href={data.placeMapUrl} target="_blank" rel="noreferrer">閱讀此地點的 Google 地圖近期評價與照片</a>，重點留意開放、入口、停車與近期施工資訊。</p>
+    <div class="mt-4 space-y-3 text-sm leading-7 text-[#173b3f]/80">
+      <details class="rounded-xl border border-[#173b3f]/10 bg-white p-4"><summary class="cursor-pointer font-semibold text-[#173b3f]">需要事先買票或預約嗎？</summary><p class="mt-3">{data.placeAdmission ?? '費用以現場公告為準'}。若涉及船班、展館、活動或有管理的場地，請再核對是否有預約及最後入場限制。</p></details>
+      <details class="rounded-xl border border-[#173b3f]/10 bg-white p-4"><summary class="cursor-pointer font-semibold text-[#173b3f]">什麼時候適合去？</summary><p class="mt-3">{data.placeHours ?? '以現場開放資訊為準'}。海岸與水域景點另外留意風浪、潮汐與日落後照明；展館則優先排在對外開放時段。</p></details>
+      <details class="rounded-xl border border-[#173b3f]/10 bg-white p-4"><summary class="cursor-pointer font-semibold text-[#173b3f]">地圖上有點位就能直接抵達嗎？</summary><p class="mt-3">不一定。港堤、燈塔、棧道、歷史遺構及停車設施可能有獨立入口或通行管制，請以現場核實的開放路線為準。</p></details>
+    </div>
+
+    {nearby.length > 0 && <div class="mt-8 border-t border-[#173b3f]/10 pt-6"><h3 class="text-lg font-semibold text-[#173b3f]">同區延伸閱讀</h3><div class="mt-3 flex flex-wrap gap-2">{nearby.map((guide) => <a href={guide.href} class="rounded-full border border-[#2e6f73]/25 bg-white px-4 py-2 text-sm font-medium text-[#2e6f73] hover:bg-[#eaf2ed]">{guide.label} ↗</a>)}</div></div>}
+  </section>
+)}

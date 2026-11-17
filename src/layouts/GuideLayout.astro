@@ -5,6 +5,7 @@ import Icon from '../components/Icon.astro';
 import MapActions from '../components/MapActions.astro';
 import SafetyAlert from '../components/SafetyAlert.astro';
 import StatusNotice from '../components/StatusNotice.astro';
+import AttractionPlanning from '../components/AttractionPlanning.astro';
 import { allGuides, site } from '../data/site';
 
 interface Props {
@@ -144,6 +145,7 @@ if (faq.length > 0) {
           <a class="mt-5 inline-block text-sm font-semibold text-[#2e6f73] underline underline-offset-4" href={authority.source} target="_blank" rel="noreferrer">查閱{authority.sourceLabel} ↗</a>
         </section>
       )}
+      {data.placeMapUrl && <AttractionPlanning entry={entry} slug={slug} />}
       <div class="article-content">
         <slot />
       </div>
