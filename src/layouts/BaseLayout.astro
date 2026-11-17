@@ -107,6 +107,16 @@ const jsonLd = structuredData
     <Footer />
     <MobileDock mapUrl={mapUrl} />
     <script is:inline>
+      // Recover a stylesheet if an older service worker has cached a transient 404.
+      window.addEventListener('load', () => {
+        document.querySelectorAll('link[rel="stylesheet"]').forEach((link) => {
+          if (link.sheet || link.dataset.retriedCss) return;
+          link.dataset.retriedCss = 'true';
+          const url = new URL(link.href, location.href);
+          url.searchParams.set('recover', '3');
+          link.href = url.toString();
+        });
+      });
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           // A versioned script URL ensures previously cached 404 assets are evicted promptly.
