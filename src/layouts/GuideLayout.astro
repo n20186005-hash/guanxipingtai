@@ -20,6 +20,18 @@ const relatedGuides = data.related
   .map((relatedSlug) => allGuides.find((guide) => guide.href === `/${relatedSlug}/`))
   .filter(Boolean);
 const h2s = headings.filter((heading) => heading.depth === 2);
+// Specific public authority context is surfaced above the article for attraction pages.
+// The original long-form article and its source citations remain in place below.
+const authorityBySlug: Record<string, { name: string; body: string; source: string; sourceLabel: string }> = {
+  'sicao-bridge': { name: '臺南市政府道路橋梁養護體系', body: '四草大橋是連接安平與四草的公共道路橋梁，通行安全、巡查與養護依市府道路橋梁制度辦理。橋下海岸遊憩區與橋面道路的管理範圍並不完全相同；沿岸觀景時請遵守現場交通與海岸告示。', source: 'https://tnda.tainan.gov.tw/civilbook/page.asp?page=120', sourceLabel: '市府橋梁維護資料' },
+  'qiaotou-beach-park': { name: '臺南市公共公園及海岸環境權責單位', body: '橋頭海灘公園是安平公共海岸遊憩空間。公園使用管理可洽市府相關窗口，海岸清潔亦涉及環境保護單位。公開資料未明確將整個區域指定為單一營運者，遊客應依現場步道、維護及安全告示活動。', source: 'https://buskersapply.tainan.gov.tw/index.php?id=60&inter=space', sourceLabel: '公園管理窗口' },
+  'anping-waterview-park': { name: '臺南市政府相關水景及觀光建設權責單位', body: '安平水景公園屬安平港歷史風貌與水域景觀建設的一環。市府觀光旅遊局曾承辦周邊開發計畫，但計畫主管機關不必然等同各項步橋和設施的日常維護單位；現場如有封閉與施工，請依管理告示通行。', source: 'https://www.twtainan.net/zh-tw/attractions/detail/5548/', sourceLabel: '臺南旅遊網景點介紹' },
+  'blue-sea-pier': { name: '臺南市漁港及近海管理所等港區權責單位', body: '碧海碼頭位於安平漁港範圍，漁港公共設施及安全管理涉及臺南市漁港及近海管理所，休閒推廣亦有地方漁業團體參與。這裡兼具漁業作業與遊憩功能，各店家活動另有自己的營運安排。', source: 'https://fishingharbor.tainan.gov.tw/News_Content.aspx?n=5562&s=55399', sourceLabel: '漁港管理所資料' },
+  'anping-fort': { name: '臺南市政府文化局古蹟營運科', body: '安平古堡由臺南市政府文化局相關單位進行園區營運與文化資產保存管理。城垣遺構、瞭望台與歷史展示共同記錄安平港口及臺灣城的變遷；園區參觀、維護及活動資訊以文化局公告為準。', source: 'https://culture.tainan.gov.tw/form/Details?Parser=2%2C4%2C40%2C%2C%2C%2C436', sourceLabel: '文化局管理資料' },
+  'anping-tree-house': { name: '臺南市政府文化局', body: '安平樹屋原為德記洋行倉庫，建築與榕樹長期共生，今日由臺南市政府文化局經營園區；部分餐飲空間另有委外安排。園區透過保存與參觀服務，讓旅客理解安平倉儲、鹽業及自然地景的交會。', source: 'https://historic.tainan.gov.tw/index.php?id=968&index=5&lang=cht&option=module&task=pageinfo', sourceLabel: '文化局園區說明' },
+  'former-tait-merchant-house': { name: '臺南市政府文化局古蹟營運科', body: '原英商德記洋行與安平樹屋同屬文化局古蹟營運園區。白色洋式建築保存了安平開港後的對外貿易記憶，今日作為歷史展示及文化參觀空間；入園資訊與維護公告可向文化局查詢。', source: 'https://historic.tainan.gov.tw/index.php?id=60&index=4&lang=cht&option=module&task=pageinfo', sourceLabel: '文化局園區介紹' }
+};
+const authority = authorityBySlug[slug];
 
 const articleSchema = {
   '@context': 'https://schema.org',
@@ -77,6 +89,7 @@ if (faq.length > 0) {
   description={data.description}
   type="article"
   structuredData={schemas}
+  mapUrl={data.placeMapUrl}
 >
   <header class:list={['guide-hero', `guide-hero-${data.accent}`]}>
     <div class="guide-orb" aria-hidden="true"></div>
@@ -92,6 +105,14 @@ if (faq.length > 0) {
       <p class="mt-6 max-w-2xl text-base leading-8 text-white/72 sm:text-lg">
         {data.intro}
       </p>
+      {data.placeMapUrl && (
+        <div class="mt-7 grid max-w-4xl gap-3 sm:grid-cols-3">
+          <div class="rounded-xl border border-white/15 bg-white/10 p-4"><span class="block text-xs text-white/55">開放資訊</span><strong class="mt-2 block text-sm leading-6 text-white">{data.placeHours ?? '以現場公告為準'}</strong></div>
+          <div class="rounded-xl border border-white/15 bg-white/10 p-4"><span class="block text-xs text-white/55">門票與停留</span><strong class="mt-2 block text-sm leading-6 text-white">{data.placeAdmission ?? '依現場公告'} · {data.placeDuration ?? '視行程而定'}</strong></div>
+          <a href={data.placeMapUrl} target="_blank" rel="noreferrer" class="rounded-xl border border-[#e98a4a]/60 bg-[#e98a4a]/20 p-4"><span class="block text-xs text-white/65">位置與導航</span><strong class="mt-2 block text-sm leading-6 text-white">{data.placeAddress} ↗</strong></a>
+        </div>
+      )}
+      {data.placeMapUrl && <a href={data.placeMapUrl} target="_blank" rel="noreferrer" class="mt-4 inline-flex items-center gap-2 text-sm text-white/80 underline underline-offset-4">查看此景點 Google 地圖最新評分、評論與相片 ↗</a>}
       <div class="mt-8 flex flex-wrap items-center gap-4 text-xs text-white/55">
         <span class="inline-flex items-center gap-2">
           <Icon name="compass" class="size-4" />
@@ -106,12 +127,29 @@ if (faq.length > 0) {
   <div class="shell grid gap-10 py-12 lg:grid-cols-[minmax(0,1fr)_280px] lg:py-20">
     <article class="min-w-0">
       {data.volatileInformation && <StatusNotice />}
+      {data.placeImage && (
+        <figure class="mb-10 overflow-hidden rounded-[1.5rem] border border-[#173b3f]/10 bg-white">
+          <img src={data.placeImage} alt={data.placeImageAlt ?? data.title} class="aspect-[4/3] w-full object-cover sm:aspect-[16/9]" loading="eager" decoding="async" />
+          <figcaption class="px-5 py-3 text-xs text-[#173b3f]/65">
+            {data.title}實景 · <a href={data.placeImageSource} class="underline underline-offset-2" target="_blank" rel="noreferrer">查看原圖來源</a>
+          </figcaption>
+        </figure>
+      )}
+      {authority && (
+        <section class="mb-10 rounded-[1.5rem] border border-[#2e6f73]/20 bg-[#eaf2ed] p-6 sm:p-8" aria-labelledby="attraction-management">
+          <p class="text-xs font-bold tracking-[.14em] text-[#2e6f73]">關於景點 · 管理與維護</p>
+          <h2 id="attraction-management" class="mt-3 text-2xl font-semibold tracking-tight text-[#173b3f]">關於{data.title.split('：')[0]}</h2>
+          <p class="mt-3 text-sm font-semibold text-[#173b3f]">管理相關單位：{authority.name}</p>
+          <p class="mt-4 text-sm leading-8 text-[#173b3f]/80">{authority.body}</p>
+          <a class="mt-5 inline-block text-sm font-semibold text-[#2e6f73] underline underline-offset-4" href={authority.source} target="_blank" rel="noreferrer">查閱{authority.sourceLabel} ↗</a>
+        </section>
+      )}
       <div class="article-content">
         <slot />
       </div>
       {slug !== 'safety' && <SafetyAlert condensed />}
 
-      <section class="mt-10 rounded-2xl border border-[#173b3f]/10 bg-white/60 p-6 sm:p-7">
+      {!data.placeMapUrl && <section class="mt-10 rounded-2xl border border-[#173b3f]/10 bg-white/60 p-6 sm:p-7">
         <p class="text-xs font-bold tracking-[.14em] text-[#2e6f73]">旅客評價 · 同步時間 {site.reviews.syncedAt}</p>
         <div class="mt-4 flex flex-wrap items-end gap-x-6 gap-y-2">
           <p class="text-3xl font-semibold leading-none tracking-[-.04em] text-[#173b3f]">
@@ -143,15 +181,15 @@ if (faq.length > 0) {
           </a>
         </div>
         <p class="mt-2 text-xs leading-7 text-[#173b3f]/45">{site.rights.photos}</p>
-      </section>
+      </section>}
       {data.showMapActions && (
         <section class="mt-10 rounded-[1.75rem] bg-[#173b3f] p-6 text-white sm:p-8">
-          <h2 class="text-2xl font-semibold">把下一步交給地圖</h2>
+          <h2 class="text-2xl font-semibold">{data.placeMapUrl ? `${data.title}交通指南與地圖` : '把下一步交給地圖'}</h2>
           <p class="mt-3 max-w-xl text-sm leading-7 text-white/65">
-            直接開啟目的地或選擇交通方式。公車與路況可能變動，出發前請再確認即時資訊。
+            {data.placeMapUrl ? `${data.placeAddress}。請使用本景點專屬地圖定位，選擇適合的路線並核對停車、公車及回程資訊。` : '直接開啟目的地或選擇交通方式。公車與路況可能變動，出發前請再確認即時資訊。'}
           </p>
           <div class="mt-6">
-            <MapActions compact />
+            {data.placeMapUrl ? <a class="button button-sunset" href={data.placeMapUrl} target="_blank" rel="noreferrer">在 Google 地圖查看{data.placeAddress ? ` · ${data.placeAddress}` : ''}</a> : <MapActions compact />}
           </div>
         </section>
       )}

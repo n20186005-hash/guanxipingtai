@@ -16,7 +16,15 @@ const guides = defineCollection({
     related: z.array(z.string()).default([]),
     intro: z.string(),
     eyebrow: z.string(),
-    accent: z.enum(['sunset', 'sea', 'dusk', 'sand']).default('sea')
+    accent: z.enum(['sunset', 'sea', 'dusk', 'sand']).default('sea'),
+    placeMapUrl: z.string().url().optional(),
+    placeAddress: z.string().optional(),
+    placeImage: z.string().optional(),
+    placeImageAlt: z.string().optional(),
+    placeImageSource: z.string().url().optional(),
+    placeHours: z.string().optional(),
+    placeAdmission: z.string().optional(),
+    placeDuration: z.string().optional()
   })
 });
 

@@ -1,16 +1,18 @@
 ---
 import Icon from './Icon.astro';
 import { site } from '../data/site';
+const mapUrl = Astro.props.mapUrl ?? site.maps.place;
+const isLocalAttraction = Boolean(Astro.props.mapUrl);
 ---
 
 <nav class="mobile-dock lg:hidden" aria-label="快速操作">
-  <a href={site.maps.place} target="_blank" rel="noreferrer">
+  <a href={mapUrl} target="_blank" rel="noreferrer">
     <Icon name="map" class="size-5" />
     <span>查看地圖</span>
   </a>
-  <a href={site.maps.driving} target="_blank" rel="noreferrer">
+  <a href={isLocalAttraction ? mapUrl : site.maps.driving} target="_blank" rel="noreferrer">
     <Icon name="route" class="size-5" />
-    <span>規劃路線</span>
+    <span>{isLocalAttraction ? '景點導航' : '規劃路線'}</span>
   </a>
   <a href="/transport-parking/">
     <Icon name="car" class="size-5" />

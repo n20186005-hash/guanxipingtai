@@ -13,16 +13,18 @@ interface Props {
   type?: 'website' | 'article';
   noindex?: boolean;
   structuredData?: object | object[];
+  mapUrl?: string;
 }
 
 const {
-  title = '觀夕平台（觀夕平臺）｜台南安平日落時間、停車與交通指南',
+  title = '觀夕平台攻略｜台南安平今日夕陽時間、停車場、公車與地圖',
   description = site.description,
   image = '/guanxipingtai-social-cover-1.jpg',
   imageAlt = '觀夕平台（觀夕平臺）在臺南安平的海岸與日落景觀',
   type = 'website',
   noindex = false,
-  structuredData
+  structuredData,
+  mapUrl
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, site.url).toString();
@@ -87,12 +89,12 @@ const jsonLd = structuredData
   </head>
   <body>
     <a href="#main-content" class="skip-link">跳至主要內容</a>
-    <Header />
+    <Header mapUrl={mapUrl} />
     <main id="main-content">
       <slot />
     </main>
     <Footer />
-    <MobileDock />
+    <MobileDock mapUrl={mapUrl} />
     <script is:inline>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {

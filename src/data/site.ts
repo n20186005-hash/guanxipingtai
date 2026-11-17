@@ -6,7 +6,7 @@ export const site = {
   domain: 'guanxipingtai.com',
   url: 'https://guanxipingtai.com',
   description:
-    '台南安平觀夕平台旅遊指南，整理今日預估日落時間、停車位置、交通方式、免費門票、開放資訊與周邊景點，幫你安排最適合的賞夕行程。',
+    '觀夕平台（觀夕平臺）位於台南安平四草大橋南端，免費看海賞夕陽。查今日預估日落時間、漁濱路停車與公車、Google 地圖及安平附近景點。',
   placeType: '觀景台',
   address: '708 臺南市安平區漁濱路',
   addressParts: {
@@ -106,6 +106,13 @@ export const allGuides = [
     description: '洗手間、停車、餐飲與補給'
   },
   { href: '/nearby/', label: '附近景點', description: '安平經典景點順遊' },
+  { href: '/anping-fort/', label: '安平古堡', description: '歷史城牆、瞭望台與古堡街' },
+  { href: '/anping-tree-house/', label: '安平樹屋', description: '榕樹與舊倉庫共生地景' },
+  { href: '/former-tait-merchant-house/', label: '德記洋行', description: '安平開港時期的洋行建築' },
+  { href: '/sicao-bridge/', label: '四草大橋', description: '安平港橋梁與夕照' },
+  { href: '/qiaotou-beach-park/', label: '橋頭海灘公園', description: '橋南端海岸步道與沙岸' },
+  { href: '/anping-waterview-park/', label: '安平水景公園', description: '水景橋、港灣與歷史水路' },
+  { href: '/blue-sea-pier/', label: '碧海碼頭', description: '安平漁港海景與休閒空間' },
   { href: '/itinerary/', label: '行程建議', description: '半日、一日與無車路線' },
   { href: '/safety/', label: '海邊安全', description: '浪況、強風與夜間提醒' },
   {

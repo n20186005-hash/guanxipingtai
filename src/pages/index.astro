@@ -456,7 +456,7 @@ const tripLengths = [
       </div>
 
       <div class="nearby-grid mt-12">
-        <a href="/nearby/#安平古堡與安平老街" class="nearby-card nearby-card-wide group">
+        <a href="/anping-fort/" class="nearby-card nearby-card-wide group">
           <Image
             src={oldStreetImage}
             alt="觀夕平台附近景點：安平古堡與安平老街古堡街的小吃店與街道"
@@ -476,7 +476,7 @@ const tripLengths = [
           <span class="image-credit">Chongkian／CC BY-SA 4.0</span>
         </a>
 
-        <a href="/nearby/#安平樹屋與德記洋行" class="nearby-card nearby-card-tall group">
+        <a href="/anping-tree-house/" class="nearby-card nearby-card-tall group">
           <Image
             src={treeHouseImage}
             alt="觀夕平台附近景點：安平樹屋內垂落的榕樹氣根與舊倉庫"
@@ -515,6 +515,24 @@ const tripLengths = [
           </div>
           <span class="image-credit">Mx. Granger／CC0</span>
         </a>
+      </div>
+      <div class="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-5" aria-label="更多安平周邊景點">
+        {[
+          { href: '/sicao-bridge/', name: '四草大橋', image: '/attractions/sicao-bridge.jpg', text: '港口橋梁、夕照與海岸步行' },
+          { href: '/qiaotou-beach-park/', name: '橋頭海灘公園', image: '/attractions/qiaotou-beach-park.jpg', text: '橋南端的濱海步道與沙岸' },
+          { href: '/anping-waterview-park/', name: '安平水景公園', image: '/attractions/anping-waterview-park.jpg', text: '水景橋、港灣與歷史水路' },
+          { href: '/blue-sea-pier/', name: '碧海碼頭', image: '/attractions/blue-sea-pier.jpg', text: '漁港、海景與休閒散步' },
+          { href: '/former-tait-merchant-house/', name: '原英商德記洋行', image: '/attractions/former-tait-house.jpg', text: '白色洋樓與安平開港歷史' }
+        ].map((place) => (
+          <a href={place.href} class="group overflow-hidden rounded-[1.35rem] bg-white shadow-sm transition-transform hover:-translate-y-1">
+            <img src={place.image} alt={`${place.name}實景`} class="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" loading="lazy" decoding="async" />
+            <div class="px-5 py-5">
+              <h3 class="text-lg font-semibold text-[#173b3f]">{place.name}</h3>
+              <p class="mt-2 text-sm leading-6 text-[#173b3f]/65">{place.text}</p>
+              <span class="mt-4 inline-block text-sm font-semibold text-[#2e6f73]">查看景點指南 →</span>
+            </div>
+          </a>
+        ))}
       </div>
     </div>
   </section>

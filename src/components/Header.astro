@@ -3,6 +3,7 @@ import Icon from './Icon.astro';
 import { primaryNavigation, site } from '../data/site';
 
 const currentPath = Astro.url.pathname;
+const mapUrl = Astro.props.mapUrl ?? site.maps.place;
 ---
 
 <header class="site-header">
@@ -36,7 +37,7 @@ const currentPath = Astro.url.pathname;
 
     <a
       class="button button-sunset header-map-button"
-      href={site.maps.place}
+      href={mapUrl}
       target="_blank"
       rel="noreferrer"
     >
@@ -65,7 +66,7 @@ const currentPath = Astro.url.pathname;
             ))
           }
           <a
-            href={site.maps.place}
+            href={mapUrl}
             target="_blank"
             rel="noreferrer"
             class="button button-sunset mt-2 justify-center"
