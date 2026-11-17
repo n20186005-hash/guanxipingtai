@@ -109,7 +109,8 @@ const jsonLd = structuredData
     <script is:inline>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').catch(() => {});
+          // A versioned script URL ensures previously cached 404 assets are evicted promptly.
+          navigator.serviceWorker.register('/sw.js?v=3').catch(() => {});
         });
       }
     </script>
