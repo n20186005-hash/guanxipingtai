@@ -1,5 +1,5 @@
 ---
-import '../styles/global.css';
+import inlineStyles from '../styles/global.css?inline';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import MobileDock from '../components/MobileDock.astro';
@@ -51,6 +51,7 @@ const jsonLd = structuredData
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" sizes="180x180" />
     <link rel="manifest" href="/site.webmanifest" />
+    <style is:global set:html={inlineStyles} />
 
     <meta name="application-name" content={site.fullName} />
     <meta name="apple-mobile-web-app-capable" content="yes" />
