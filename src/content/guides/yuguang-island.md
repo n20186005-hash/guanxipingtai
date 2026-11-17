@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/hEkpVioifusvs38J8"
 placeHours: "戶外公共區域依現場公告；沙灘受潮汐天候影響"
 placeAdmission: "一般公共步道與沙灘免費"
 placeDuration: "約 1.5–3 小時"
+placeImage: "/attractions/yuguang-island.jpg"
+placeImageAlt: "漁光島現場景觀"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/%E6%BC%81%E5%85%89%E5%B3%B6.jpg"
 ---
 
 ## 探索漁光島

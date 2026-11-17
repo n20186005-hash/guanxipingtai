@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/p9p6PU938n2UWm6EA"
 placeHours: "船班依營運方當日公告，天候及潮汐可能調整"
 placeAdmission: "各航線票價與優惠依業者售票資訊"
 placeDuration: "依選擇的港內或運河航線及報到時間"
+placeImage: "/attractions/anping-port.jpg"
+placeImageAlt: "安平港與運河航行環境（區域實景）"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/2023%20Anping%20Port.jpg"
 ---
 
 ## 探索安平遊港遊運河

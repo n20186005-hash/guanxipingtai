@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/mqajgKee43rn6gqF9"
 placeHours: "自然沙岸，依潮汐、天候與現場管制"
 placeAdmission: "一般免費"
 placeDuration: "約 30–60 分鐘"
+placeImage: "/attractions/yuguang-coast.jpg"
+placeImageAlt: "漁光島月牙形海岸的沙灘景觀"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/%E6%BC%81%E5%85%89%E5%B3%B6%E6%B2%99%E7%81%98.jpg"
 ---
 
 ## 探索月牙灣

@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/oBnpYdVrpgB4WC9q8"
 placeHours: "港務及作業設施非一般開放景區，管制依現場公告"
 placeAdmission: "遠眺公共岸線一般無門票；不得逕自進入港區"
 placeDuration: "合法觀景處約 15–30 分鐘"
+placeImage: "/attractions/anping-port.jpg"
+placeImageAlt: "安平港港區與防波堤環境（區域實景）"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/2023%20Anping%20Port.jpg"
 ---
 
 ## 探索安平港堤岸與燈塔

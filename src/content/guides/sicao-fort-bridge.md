@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/JsWK8deLWoGWqWa66"
 placeHours: "戶外公共通道依現場管理及施工公告"
 placeAdmission: "公共位置一般免費"
 placeDuration: "約15–30分鐘"
+placeImage: "/attractions/sicao-battery.jpg"
+placeImageAlt: "四草砲臺遺構（橋梁周邊歷史場景）"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/%E5%8F%B0%E5%8D%97%E5%9B%9B%E8%8D%89%E7%A0%B2%E5%8F%B0.JPG"
 ---
 
 ## 探索海堡橋史蹟

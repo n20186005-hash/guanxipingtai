@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/u5EwvBy5E4ZHueL88"
 placeHours: "戶外公園，依現場設施及公告"
 placeAdmission: "一般公園散步免費"
 placeDuration: "約 20–45 分鐘"
+placeImage: "/attractions/anping-port.jpg"
+placeImageAlt: "安平港水岸環境（億載公園周邊區域）"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/2023%20Anping%20Port.jpg"
 ---
 
 ## 探索億載公園

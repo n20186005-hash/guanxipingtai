@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/HJM52LxP6Pd2vLeA8"
 placeHours: "戶外設施依現場公告、天候與維修狀況"
 placeAdmission: "一般公共遊戲場免費"
 placeDuration: "親子約 30–75 分鐘"
+placeImage: "/attractions/anping-port.jpg"
+placeImageAlt: "港濱歷史公園附近港灣環境（區域實景）"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/2023%20Anping%20Port.jpg"
 ---
 
 ## 探索安平港濱歷史特色遊戲場

@@ -132,7 +132,7 @@ if (faq.length > 0) {
         <figure class="mb-10 overflow-hidden rounded-[1.5rem] border border-[#173b3f]/10 bg-white">
           <img src={data.placeImage} alt={data.placeImageAlt ?? data.title} class="aspect-[4/3] w-full object-cover sm:aspect-[16/9]" loading="eager" decoding="async" />
           <figcaption class="px-5 py-3 text-xs text-[#173b3f]/65">
-            {data.title}實景 · <a href={data.placeImageSource} class="underline underline-offset-2" target="_blank" rel="noreferrer">查看原圖來源</a>
+            {data.placeImageAlt ?? `${data.title}實景`} · <a href={data.placeImageSource} class="underline underline-offset-2" target="_blank" rel="noreferrer">查看原圖來源</a>
           </figcaption>
         </figure>
       )}

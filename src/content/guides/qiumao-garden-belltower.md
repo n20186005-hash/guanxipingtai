@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/TqmSQb6nQrWZxapf8"
 placeHours: "外觀可見範圍依現場開放與管制"
 placeAdmission: "外觀遠眺通常無獨立門票"
 placeDuration: "約 10–20 分鐘"
+placeImage: "/attractions/qiumao-garden.jpg"
+placeImageAlt: "秋茂園景觀（園區實景，非鐘樓特寫）"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/Qiumao%20Garden%20%E7%A7%8B%E8%8C%82%E5%9C%92%20-%20panoramio%20(1).jpg"
 ---
 
 ## 探索秋茂園鐘樓

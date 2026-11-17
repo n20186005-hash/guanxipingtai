@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/98gG7Wp34NRoL9gr6"
 placeHours: "戶外開放空間，依現場公告與管制"
 placeAdmission: "一般戶外散步免費"
 placeDuration: "約 30–50 分鐘"
+placeImage: "/attractions/lin-moniang.jpg"
+placeImageAlt: "林默娘公園現場景觀"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/Lin%20Mo%20Niang%20Park%2054754-Tainan%20(48719655603).jpg"
 ---
 
 ## 探索林默娘公園

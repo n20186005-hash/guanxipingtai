@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/ihkX6T8NsHmVBFuz8"
 placeHours: "堤岸是否可進入依主管機關現場管制"
 placeAdmission: "非一般售票景點"
 placeDuration: "合法位置遠眺約 10–25 分鐘"
+placeImage: "/attractions/anping-jetty.jpg"
+placeImageAlt: "安平港歷史導流堤（港區堤岸背景，非巨人耳機裝置）"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/%E5%8E%9F%E5%AE%89%E5%B9%B3%E6%B8%AF%E5%B0%8E%E6%B5%81%E5%A0%A4%E5%8D%97%E5%A0%A4.JPG"
 ---
 
 ## 探索巨人耳機防波堤

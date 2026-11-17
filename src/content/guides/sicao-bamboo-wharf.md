@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/hLEpfbfM6113nXNUA"
 placeHours: "港岸依現場開放與漁業作業管制"
 placeAdmission: "公共岸邊觀察通常免費，任何船筏活動另計"
 placeDuration: "約20–40分鐘"
+placeImage: "/attractions/sicao-lake.jpg"
+placeImageAlt: "四草湖水域景觀（周邊環境）"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/%E5%AE%89%E5%8D%97%E5%8D%80%E5%9B%9B%E8%8D%89%E6%B9%96.jpg"
 ---
 
 ## 竹筏港碼頭的地景

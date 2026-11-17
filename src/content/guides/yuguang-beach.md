@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/aTo7JQP4w21y4C2g6"
 placeHours: "自然海岸，依現場管制、潮汐與天候"
 placeAdmission: "一般沙灘散步免費"
 placeDuration: "約 30–75 分鐘"
+placeImage: "/attractions/yuguang-coast.jpg"
+placeImageAlt: "漁光島沙灘現場景觀"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/%E6%BC%81%E5%85%89%E5%B3%B6%E6%B2%99%E7%81%98.jpg"
 ---
 
 ## 探索漁光沙灘

@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/s1eTX1DMhY9QJsmt8"
 placeHours: "戶外史蹟標示依周邊公共路徑開放"
 placeAdmission: "公共路徑一般免費，非完整古堡售票園區"
 placeDuration: "約20–40分鐘"
+placeImage: "/attractions/sicao-battery.jpg"
+placeImageAlt: "四草砲臺遺構（周邊歷史防禦設施，非荷蘭堡壘原貌）"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/%E5%8F%B0%E5%8D%97%E5%9B%9B%E8%8D%89%E7%A0%B2%E5%8F%B0.JPG"
 ---
 
 ## 探索荷蘭海堡遺址

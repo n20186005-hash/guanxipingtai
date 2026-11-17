@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/VM3NrjBvxTnHmr5D9"
 placeHours: "作業漁港，公共可通行範圍依港區公告"
 placeAdmission: "合法公共岸邊觀察通常免費"
 placeDuration: "約20–45分鐘"
+placeImage: "/attractions/sicao-lake.jpg"
+placeImageAlt: "四草湖與附近水域（區域景觀）"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/%E5%AE%89%E5%8D%97%E5%8D%80%E5%9B%9B%E8%8D%89%E6%B9%96.jpg"
 ---
 
 ## 探索四草漁港

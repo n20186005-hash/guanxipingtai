@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/K9h2HePtEnbDYiwD9"
 placeHours: "依大眾廟及陳列館現場公告"
 placeAdmission: "船票相關優惠曾有公告；現行規則現場核實"
 placeDuration: "約20–40分鐘"
+placeImage: "/attractions/sicao-mangrove.jpg"
+placeImageAlt: "四草紅樹林地景（展示館附近生態環境）"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/Taijiang%20National%20Park%20%E2%80%94%20Sicao%20Mangrove%20Green%20Tunnel%20(Annan%20Dist.%2C%20Tainan%20City%2C%20Taiwan%20(R.O.C.).jpg"
 ---
 
 ## 探索四草抹香鯨陳列館

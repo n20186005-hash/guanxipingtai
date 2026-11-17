@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/mMmw3AHy4ewG4kN76"
 placeHours: "依場域現場標示"
 placeAdmission: "依現場規定，無可核實的統一票務資料"
 placeDuration: "短暫停留約15–30分鐘，依現地條件"
+placeImage: "/attractions/sicao-mangrove.jpg"
+placeImageAlt: "四草紅樹林水域景觀（萬龍園周邊環境）"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/Taijiang%20National%20Park%20%E2%80%94%20Sicao%20Mangrove%20Green%20Tunnel%20(Annan%20Dist.%2C%20Tainan%20City%2C%20Taiwan%20(R.O.C.).jpg"
 ---
 
 ## 萬龍園位置與參觀

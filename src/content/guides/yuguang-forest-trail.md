@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/62DufHQHxcQRfD5W9"
 placeHours: "戶外林地步道，依現場通行與天候"
 placeAdmission: "一般免費"
 placeDuration: "約 20–50 分鐘"
+placeImage: "/attractions/yuguang-pine.jpg"
+placeImageAlt: "漁光島防風松林實景"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/Yuguang%20Island%20Pine%20Grove%20%E6%BC%81%E5%85%89%E5%B3%B6%E6%9D%BE%E6%9E%97%20-%20panoramio.jpg"
 ---
 
 ## 探索漁光森林與林間步道

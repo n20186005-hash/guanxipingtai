@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/6Tquk4a1kuEaYSCd8"
 placeHours: "跨多處戶外與展館，開放時間各自不同"
 placeAdmission: "公共景觀不設統一門票，船筏及展館另依規定"
 placeDuration: "建議半日，依選擇據點"
+placeImage: "/attractions/taijiang-eco.jpg"
+placeImageAlt: "台江生態文化園區實景"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/Taijiang%20Ecological%20and%20Cultural%20Park%20%E5%8F%B0%E6%B1%9F%E7%94%9F%E6%85%8B%E6%96%87%E5%8C%96%E5%9C%92%E5%8D%80%20-%20panoramio.jpg"
 ---
 
 ## 探索台江生態文化園區

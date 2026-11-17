@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/YW8s4dtCfXVjQUCV7"
 placeHours: "戶外空間及教育設施依現場公告；室內請參照遊客中心時間"
 placeAdmission: "一般開放步行空間免費；活動另依公告"
 placeDuration: "約 40–90 分鐘"
+placeImage: "/attractions/taijiang-eco.jpg"
+placeImageAlt: "台江生態文化園區實景（台江學園周邊環境）"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/Taijiang%20Ecological%20and%20Cultural%20Park%20%E5%8F%B0%E6%B1%9F%E7%94%9F%E6%85%8B%E6%96%87%E5%8C%96%E5%9C%92%E5%8D%80%20-%20panoramio.jpg"
 ---
 
 ## 探索台江學園

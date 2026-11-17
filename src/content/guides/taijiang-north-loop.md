@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/GRQitkkxCeukuiGj9"
 placeHours: "步道依園區現場開放、維護及天候公告"
 placeAdmission: "一般開放步道無獨立門票"
 placeDuration: "約 20–50 分鐘，依實際可行範圍"
+placeImage: "/attractions/taijiang-eco.jpg"
+placeImageAlt: "台江生態文化園區景觀（北環線沿途區域）"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/Taijiang%20Ecological%20and%20Cultural%20Park%20%E5%8F%B0%E6%B1%9F%E7%94%9F%E6%85%8B%E6%96%87%E5%8C%96%E5%9C%92%E5%8D%80%20-%20panoramio.jpg"
 ---
 
 ## 探索北環步道

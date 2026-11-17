@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/aq6LnGfVPhLasyKVA"
 placeHours: "港務設施，並非一般開放的觀光塔"
 placeAdmission: "合法公共位置遠眺無獨立票價"
 placeDuration: "遠眺約 10–20 分鐘"
+placeImage: "/attractions/anping-port.jpg"
+placeImageAlt: "安平港港口遠景（北堤燈塔所在港區）"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/2023%20Anping%20Port.jpg"
 ---
 
 ## 探索北堤燈塔

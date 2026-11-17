@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/oBnpYdVrpgB4WC9q8"
 placeHours: "港務設施，並非固定對外開放觀光景點"
 placeAdmission: "合法公共岸線遠眺無獨立票價"
 placeDuration: "遠眺約 10–20 分鐘"
+placeImage: "/attractions/anping-jetty.jpg"
+placeImageAlt: "安平港原導流堤南堤（歷史堤岸實景，非燈塔特寫）"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/%E5%8E%9F%E5%AE%89%E5%B9%B3%E6%B8%AF%E5%B0%8E%E6%B5%81%E5%A0%A4%E5%8D%97%E5%A0%A4.JPG"
 ---
 
 ## 探索南堤燈塔

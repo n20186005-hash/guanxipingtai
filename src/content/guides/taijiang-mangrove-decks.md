@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/KCp8o8WtTRrKWdGJ6"
 placeHours: "戶外觀察平台依現場開放及維護公告"
 placeAdmission: "一般戶外觀察不另售票；導覽活動依公告"
 placeDuration: "約 20–45 分鐘"
+placeImage: "/attractions/sicao-mangrove.jpg"
+placeImageAlt: "台江四草紅樹林水域（棧道周邊生態）"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/Taijiang%20National%20Park%20%E2%80%94%20Sicao%20Mangrove%20Green%20Tunnel%20(Annan%20Dist.%2C%20Tainan%20City%2C%20Taiwan%20(R.O.C.).jpg"
 ---
 
 ## 探索台江紅樹林植物觀賞區

@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/xZLudxoqD1WgySmKA"
 placeHours: "依球場管理與比賽、訓練安排"
 placeAdmission: "場地使用與活動票務依主管單位或主辦方公告"
 placeDuration: "依活動時間；路過查看約 10–20 分鐘"
+placeImage: "/attractions/yuguang-view.jpg"
+placeImageAlt: "漁光島景觀（球場所在島嶼，非球場畫面）"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/%E5%8F%B0%E5%8D%97%E6%BC%81%E5%85%89%E5%B3%B6.jpg"
 ---
 
 ## 認識億載漁光棒球場

@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/K5F8TjyE4HdXnGdD9"
 placeHours: "戶外空間依現場管理、工程與天候公告"
 placeAdmission: "一般公園散步免費"
 placeDuration: "約20–45分鐘"
+placeImage: "/attractions/sicao-lake.jpg"
+placeImageAlt: "四草湖畔水域（河濱區域景觀）"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/%E5%AE%89%E5%8D%97%E5%8D%80%E5%9B%9B%E8%8D%89%E6%B9%96.jpg"
 ---
 
 ## 探索四草親水公園

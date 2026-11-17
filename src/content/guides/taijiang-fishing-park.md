@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/sTkTQgoafYxAR6NC7"
 placeHours: "體驗活動時段依營運單位現場及當日公告"
 placeAdmission: "視參加的管筏或體驗項目而定，須事先核對"
 placeDuration: "約 60–120 分鐘，另計候船時間"
+placeImage: "/attractions/taijiang-eco.jpg"
+placeImageAlt: "台江生態文化園區水岸（漁樂園周邊環境）"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/Taijiang%20Ecological%20and%20Cultural%20Park%20%E5%8F%B0%E6%B1%9F%E7%94%9F%E6%85%8B%E6%96%87%E5%8C%96%E5%9C%92%E5%8D%80%20-%20panoramio.jpg"
 ---
 
 ## 探索台江漁樂園

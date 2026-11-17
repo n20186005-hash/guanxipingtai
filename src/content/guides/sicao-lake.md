@@ -16,6 +16,9 @@ placeMapUrl: "https://maps.app.goo.gl/JfWDUC5DYVJsMvwX6"
 placeHours: "自然水域，陸上觀景動線依現場開放"
 placeAdmission: "合法公共岸邊觀景通常免費；遊筏另計"
 placeDuration: "約30–60分鐘（不含船程）"
+placeImage: "/attractions/sicao-lake.jpg"
+placeImageAlt: "四草湖實景"
+placeImageSource: "https://commons.wikimedia.org/wiki/Special:FilePath/%E5%AE%89%E5%8D%97%E5%8D%80%E5%9B%9B%E8%8D%89%E6%B9%96.jpg"
 ---
 
 ## 探索四草湖
