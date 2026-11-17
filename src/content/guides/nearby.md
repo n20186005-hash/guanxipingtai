@@ -35,15 +35,23 @@ accent: "sea"
 
 ## 億載金城
 
-城牆、護城河與草地讓行程從巷弄轉為開闊空間，適合親子與想了解安平防禦歷史的旅客。夏季遮蔭有限，要避開最曝曬時段。
+**延伸專頁**：[億載金城（二鯤鯓砲臺）](/yizai-golden-fort/) · [四稜郭建築觀察](/four-bastion-fort/) · [億載公園](/yizai-park/) · [安平定情碼頭德陽艦園區](/teyang-destroyer-ship-park/)。
+
+城牆、護城河與草地讓行程從巷弄轉為開闊空間，適合親子與想了解安平防禦歷史的旅客。億載金城又稱二鯤鯓砲臺；四稜郭是這座古蹟的建築形制，不是另一個收費景點。夏季遮蔭有限，要避開最曝曬時段。散步可接續億載公園的白千層林蔭，再到德陽艦認識現代海軍歷史。
 
 **適合安排**：中午後、觀夕平台之前。  
 **建議停留**：約 60–90 分鐘。  
 **出發前確認**：開放時間、活動與維修資訊。
 
+**周邊設施導航**：[鯤鯓砲台充電站](https://maps.app.goo.gl/S7p78KatXAsUt2daA)（請先核對適用車型）、[YouBike 億載金城站](https://maps.app.goo.gl/ZXwvbifYAcGxo7iD8)（車位與車輛動態變化）。
+
 ## 台江國家公園遊客中心
 
+**台江延伸專頁**：[台江國家公園](/taijiang-national-park/) · [遊客中心](/taijiang-visitor-center/) · [台江漁樂園](/taijiang-fishing-park/) · [紅樹林植物觀賞區](/taijiang-mangrove-decks/) · [台江學園北環步道](/taijiang-north-loop/) · [台江學園](/taijiang-academy/)。
+
 白色建築與水域景觀具現代感，可與四草、濕地或自然教育行程搭配。從台江到觀夕平台仍需交通時間，不應把兩處當成緊鄰景點。
+
+**自駕設施**：[台江國家公園遊客停車場](https://maps.app.goo.gl/uRRFU48UgmSRfwX69)；停車場是獨立地圖點，勿誤將國家公園廣域標記當成車輛入口。
 
 **適合安排**：上午或午後較早。  
 **建議停留**：約 60–120 分鐘，依展覽與戶外動線調整。  
@@ -51,7 +59,11 @@ accent: "sea"
 
 ## 四草綠色隧道
 
+**四草深度遊覽**：[四草綠色隧道](/sicao-green-tunnel/) · [四草大眾廟](/sicao-dazhong-temple/) · [抹香鯨陳列館](/sicao-whale-exhibition/) · [台江生態文化園區](/taijiang-ecocultural-area/) · [四草湖](/sicao-lake/) · [竹筏港碼頭](/sicao-bamboo-wharf/) · [四草親水公園](/sicao-riverside-park/) · [四草漁港](/sicao-fishing-harbor/) · [海堡橋遺跡](/sicao-fort-bridge/) · [荷蘭海堡遺址](/sicao-dutch-fort/) · [萬龍園](/sicao-wanlong-garden/)。
+
 通常涉及船班、候船與現場安排，時間控制不像一般步行景點。若同日要看夕陽，應預留充足緩衝，不把最後一班船與日落時間排得太緊。
+
+**實用設施導航**：[綠色隧道免費停車場](https://maps.app.goo.gl/qwvn7Qw6zidKSzMdA) · [四草大眾廟美食廣場](https://maps.app.goo.gl/WHHVuqwYAFoMpw4H7)。袖珍版亞馬遜河為綠色隧道別稱，Sicao Lake即四草湖，不重複建立同一景點。
 
 **適合安排**：上午至中午。  
 **建議停留**：包含等候，至少預留 2 小時。  
@@ -60,6 +72,10 @@ accent: "sea"
 ## 林默娘公園與安平港周邊
 
 適合散步、看港灣和安排較輕鬆的親子活動。可作為古堡老街與觀夕平台之間的過渡，也能在夕陽行程前讓同行者稍作休息。
+
+**港濱遊覽專頁**：[林默娘公園](/lin-moniang-park/) · [港濱歷史公園](/historic-harborside-park/) · [安平港濱歷史特色遊戲場](/anping-harborside-playground/) · [大魚的祝福](/big-fish-blessing/) · [立驛國際安平遊港遊運河](/anping-harbor-canal-cruise/)；港濱歷史公園內含遊戲場及大魚的祝福，步行可串聯，但各有專屬地圖定位。船遊須提前核對班次與登船處。
+
+**交通設施定位**：[YouBike 林默娘公園](https://maps.app.goo.gl/dtPn2nvpfPMk8VqV7) · [安億路路邊收費停車格](https://maps.app.goo.gl/E3tAnJ16WYxE5ay46)。借還車數、收費時段與停車空位請依當日資訊，設施不另當作觀光景點。
 
 **適合安排**：下午、觀夕平台之前。  
 **建議停留**：約 30–60 分鐘。  
@@ -84,6 +100,10 @@ accent: "sea"
 **出發前確認**：交通、開放動線與活動安排。
 
 ## 漁光島
+
+**漁光島深度遊覽**：[漁光島總覽](/yuguang-island/) · [漁光沙灘](/yuguang-beach/) · [漁光島林間步道與漁光森林](/yuguang-forest-trail/) · [月牙灣](/crescent-bay/) · [漁光公園](/yuguang-park/) · [巨人耳機防波堤](/yuguang-headphone-breakwater/) · [秋茂園鐘樓](/qiumao-garden-belltower/) · [億載漁光棒球場](/yizai-yuguang-baseball-field/)。
+
+**港口地景**：[南堤燈塔](/anping-south-breakwater-light/) · [北堤燈塔](/anping-north-breakwater-light/) · [安平港導流堤及小砲台](/anping-harbor-breakwaters/)。燈塔與堤岸部分位置屬管制或危險範圍，請從合法開放岸線觀察，勿依導航闖入。
 
 同樣是臺南熱門海岸景點，氛圍較偏向防風林與沙灘。若只安排半天，不建議為了比較而在日落前頻繁移動；選一處慢慢停留，通常比兩邊趕場更好。
 

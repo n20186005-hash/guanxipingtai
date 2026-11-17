@@ -1,0 +1,35 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  updated?: string;
+}
+
+const { title, description, updated = '2026 年 11 月 17 日' } = Astro.props;
+---
+
+<BaseLayout title={`${title}｜觀夕平台旅遊指南`} description={description}>
+  <header class="guide-hero guide-hero-sea">
+    <div class="shell relative z-10 py-14 sm:py-20">
+      <nav class="breadcrumb" aria-label="麵包屑">
+        <a href="/">首頁</a><span aria-hidden="true">／</span><span>{title}</span>
+      </nav>
+      <h1 class="mt-8 text-balance text-[clamp(2.3rem,6vw,4.4rem)] font-semibold leading-tight tracking-[-.045em] text-white">{title}</h1>
+      <p class="mt-5 max-w-2xl text-base leading-8 text-white/75">{description}</p>
+      <p class="mt-4 text-sm text-white/60">最近更新：{updated}</p>
+    </div>
+  </header>
+  <div class="shell py-12 sm:py-20">
+    <article class="mx-auto max-w-4xl space-y-9 rounded-3xl border border-[#173b3f]/10 bg-white/85 p-6 leading-8 text-[#173b3f]/80 shadow-sm sm:p-12 [&_a]:font-semibold [&_a]:text-[#2e6f73] [&_a]:underline [&_h2]:mb-4 [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:text-[#173b3f] [&_li]:mb-2 [&_ul]:list-disc [&_ul]:pl-6">
+      <slot />
+    </article>
+    <nav class="mx-auto mt-8 flex max-w-4xl flex-wrap gap-4 text-sm font-semibold text-[#2e6f73]" aria-label="網站政策">
+      <a href="/privacy-policy/">隱私政策</a>
+      <a href="/terms-of-service/">服務條款</a>
+      <a href="/cookie-settings/">Cookie 設定</a>
+      <a href="/">返回首頁</a>
+    </nav>
+  </div>
+</BaseLayout>

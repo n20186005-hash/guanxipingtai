@@ -58,14 +58,25 @@ const jsonLd = structuredData
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="mobile-web-app-capable" content="yes" />
 
-    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-HXM22WWPKP"></script>
     <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
-      gtag('config', 'G-HXM22WWPKP');
+      // 分析工具僅在訪客主動同意後載入，拒絕或未選擇時不寫入分析 Cookie。
+      window.enableSiteAnalytics = function () {
+        if (window.siteAnalyticsLoaded) return;
+        window.siteAnalyticsLoaded = true;
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { window.dataLayer.push(arguments); };
+        window.gtag('js', new Date());
+        window.gtag('config', 'G-HXM22WWPKP');
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-HXM22WWPKP';
+        document.head.appendChild(script);
+      };
+      try {
+        if (localStorage.getItem('guanxipingtai-cookie-consent') === 'accepted') {
+          window.enableSiteAnalytics();
+        }
+      } catch (_) { /* 儲存空間停用時不啟用分析 */ }
     </script>
 
     <meta property="og:type" content={type} />

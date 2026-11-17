@@ -1,0 +1,53 @@
+---
+import PolicyLayout from '../layouts/PolicyLayout.astro';
+---
+
+<PolicyLayout title="Cookie 設定" description="管理觀夕平台旅遊指南的統計 Cookie 偏好。必要功能照常運作，分析統計由您自行選擇。">
+  <section>
+    <h2>您的 Cookie 選擇</h2>
+    <p>本站使用必要的瀏覽器及主機技術提供頁面、安全保護與基本功能。Google Analytics 屬於可選統計服務，只有您同意後才載入。拒絕不會影響景點文章、地圖連結或天氣資訊的閱讀。</p>
+    <div class="mt-6 rounded-2xl border border-[#173b3f]/15 bg-[#f0f7f5] p-6" data-cookie-panel>
+      <p class="font-semibold text-[#173b3f]" data-cookie-status aria-live="polite">正在讀取目前設定…</p>
+      <div class="mt-5 flex flex-wrap gap-3">
+        <button type="button" class="rounded-full bg-[#2e6f73] px-5 py-3 text-sm font-bold text-white hover:bg-[#173b3f] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" data-cookie-accept>允許統計 Cookie</button>
+        <button type="button" class="rounded-full border border-[#173b3f]/25 bg-white px-5 py-3 text-sm font-bold text-[#173b3f] hover:bg-[#e7f1ed] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" data-cookie-reject>拒絕統計 Cookie</button>
+      </div>
+      <p class="mt-4 text-sm">變更同意狀態後，重新整理本頁即可完整套用新偏好。拒絕時會停止未來載入；已設定的第三方 Cookie 可透過瀏覽器設定清除。</p>
+    </div>
+  </section>
+  <section>
+    <h2>本站使用哪些類型？</h2>
+    <ul>
+      <li><strong>必要功能：</strong>提供頁面、安全連線及記錄您的偏好；不提供關閉必要安全功能的選項。</li>
+      <li><strong>統計分析（選擇性）：</strong>您允許後才會載入 Google Analytics，用於了解整體流量與使用情形。</li>
+      <li><strong>外部嵌入與連結：</strong>地圖嵌入及您主動前往的第三方服務，可能依其各自政策使用 Cookie。</li>
+    </ul>
+  </section>
+  <section>
+    <h2>如何再次修改或清除資料？</h2>
+    <p>您可以隨時返回本頁重新選擇。若希望移除瀏覽器中既有的第三方 Cookie，請於瀏覽器的隱私與網站資料設定中清除；本站無法直接刪除其他網域建立的 Cookie。</p>
+  </section>
+  <section>
+    <h2>進一步瞭解</h2>
+    <p>請閱讀本站的 <a href="/privacy-policy/">隱私政策</a> 與 <a href="/terms-of-service/">服務條款</a>。若有疑問，請聯絡 <a href="mailto:laupetter72@gmail.com">laupetter72@gmail.com</a>。</p>
+  </section>
+</PolicyLayout>
+
+<script>
+  const storageKey = 'guanxipingtai-cookie-consent';
+  const status = document.querySelector<HTMLElement>('[data-cookie-status]');
+  const show = (choice: string | null) => {
+    if (status) status.textContent = choice === 'accepted' ? '目前設定：已允許統計 Cookie' : choice === 'rejected' ? '目前設定：已拒絕統計 Cookie' : '目前設定：尚未選擇（統計功能預設關閉）';
+  };
+  try { show(localStorage.getItem(storageKey)); } catch { show(null); }
+  document.querySelector('[data-cookie-accept]')?.addEventListener('click', () => {
+    try { localStorage.setItem(storageKey, 'accepted'); } catch { /* 瀏覽器可能禁止儲存 */ }
+    show('accepted');
+    window.location.reload();
+  });
+  document.querySelector('[data-cookie-reject]')?.addEventListener('click', () => {
+    try { localStorage.setItem(storageKey, 'rejected'); } catch { /* 瀏覽器可能禁止儲存 */ }
+    show('rejected');
+    window.location.reload();
+  });
+</script>

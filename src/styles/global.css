@@ -437,6 +437,25 @@ summary {
   font-weight: 800;
 }
 
+.weather-retry {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.85rem;
+  padding: 0.65rem 1.1rem;
+  border: 0;
+  border-radius: 999px;
+  background: #2e6f73;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.weather-retry:hover { background: #173b3f; }
+.weather-retry:focus-visible { outline: 3px solid #e98a4a; outline-offset: 3px; }
+.weather-retry:disabled { opacity: 0.6; cursor: wait; }
+
 .weather-loading-icon {
   width: 2.5rem;
   height: 2.5rem;
